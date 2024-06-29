@@ -1,11 +1,14 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navigation/Navbar';
 import HomePage from './pages/HomePage';
 import FlowDiagram from './components/flowDiagrams/Landing';
 import ErrorPage from './pages/ErrorPage';
 import InnerFlowDiagram from './components/flowDiagrams/Switch';
-import RegisterPage from './pages/Register'; 
+import RegisterPage from './pages/Register';
+import LoginPage from './pages/LoginPage';
+import TimelinePage from './pages/TimelinePage';
 
 const LayoutWithNavbar = () => (
   <div className="layout-container">
@@ -24,45 +27,28 @@ const LayoutWithoutNavbar = () => (
   </div>
 );
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <LayoutWithNavbar />,
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "flowdiagram",
-        element: <FlowDiagram />,
-      },
-      {
-        path: "flowdiagram/:nodeid",
-        element: <InnerFlowDiagram />
-      }
-    ],
-  },
-  {
-    path: "auth",
-    element: <LayoutWithoutNavbar />,
-    children: [
-      {
-        path: "register",
-        element: <RegisterPage />,
-      },
-      {
-        path: "login",
-        element: <RegisterPage />,
-      }
-    ],
-  },
-]);
-
 const App = () => {
   return (
-    <RouterProvider router={router} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LayoutWithNavbar />}>
+          <Route index element={<HomePage />} />
+          <Route path="flowdiagram" element={<FlowDiagram />} />
+          <Route path="flowdiagram/:nodeid" element={<InnerFlowDiagram />} />
+          <Route path="timeline" element={<TimelinePage />} />
+        </Route>
+        <Route path="auth" element={<LayoutWithoutNavbar />}>
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
+
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<App />);
 
 export default App;
