@@ -5,7 +5,6 @@ import { Link, useLocation } from "react-router-dom";
 let tabs = [
   { id: "dashboard", label: "Dashboard", path: "/" },
   { id: "skilltree", label: "Skill Tree", path: "/flowdiagram" },
-  { id: "analytics", label: "Analytics", path: "/analytics" },
   { id: "timeline", label: "Timeline", path: "/timeline" }
 ];
 

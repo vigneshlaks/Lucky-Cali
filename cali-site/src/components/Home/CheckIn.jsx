@@ -55,7 +55,6 @@ const activityData = generateActivityDataWithZeros(existingActivityData);
 const CheckIn = () => {
   return (
     <div >
-      <h2>Check in</h2>
       <ActivityCalendar
         data={activityData}
         blockSize={15}

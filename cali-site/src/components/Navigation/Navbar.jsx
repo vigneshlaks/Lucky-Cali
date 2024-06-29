@@ -1,18 +1,22 @@
-import AnimatedTabs from './Navigation';
-import ShinyButton from '../auth/SignIn';
+import AnimatedTabs from './MiddleNavigation';
+import ShinyButton from './ShinyButton';
+import EndNavigation from './EndNavigation';
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-900 text-white px-4 py-4">  {/* Background is black */}
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center justify-center flex-grow"> {/* Center tabs horizontally */}
-          <AnimatedTabs></AnimatedTabs>
+    <div className="bg-black text-white px-4 py-2"> 
+      <div className="container mx-auto grid grid-cols-3 items-center">
+      <div className="flex justify-start">
+        <img src="/src/components/Navigation/logo.svg" alt="Logo" width='125' />
         </div>
-        <div className="flex items-center space-x-6"> {/* Increased spacing */}
-          <ShinyButton />
+        <div className="flex justify-center"> 
+          <AnimatedTabs />
+        </div>
+        <div className="flex justify-end">
+          <EndNavigation />
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 

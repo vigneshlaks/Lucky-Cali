@@ -3,7 +3,6 @@ import CardWrapper from "./CardWrapper"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +20,7 @@ const RegisterCard = () => {
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
-      name: "",
+      username: "",
       password: "",
       confirmPassword: ""
     }
@@ -56,10 +55,10 @@ const RegisterCard = () => {
               />
               <FormField
                 control={form.control}
-                name="name"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input {...field} type="text" />
                     </FormControl>
