@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { lineChartData } from "../../config/lineChartData";
+import { lineChartData } from "../config/lineChartData";
 
 const LineChartExample = () => {
   return (

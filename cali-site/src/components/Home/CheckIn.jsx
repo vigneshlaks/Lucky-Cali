@@ -1,3 +1,4 @@
+import React from 'react';
 import ActivityCalendar from 'react-activity-calendar';
 
 // Function to generate comprehensive activity data including zero values
@@ -54,11 +55,11 @@ const activityData = generateActivityDataWithZeros(existingActivityData);
 
 const CheckIn = () => {
   return (
-    <div >
+    <div style={{ width: '100%', overflow: 'hidden' }}>
       <ActivityCalendar
         data={activityData}
-        blockSize={15}
-        blockMargin={5}
+        blockSize={9.5}  // Smaller block size
+        blockMargin={3} // Smaller block margin
         theme={{
           light: ['#333333', '#666666', '#999999', '#cccccc', '#ffffff'], // Gradient from dark gray to white
           dark: ['#333333', '#666666', '#999999', '#cccccc', '#ffffff']
