@@ -47,7 +47,7 @@ const FlowDiagram = () => {
   };
 
   return (
-    <div className="w-full h-full" style={{ height: '100%', backgroundColor: '#000' }}>
+    <div className="w-full h-full" style={{ height: '100vh', backgroundColor: '#000' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

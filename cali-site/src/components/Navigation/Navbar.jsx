@@ -7,7 +7,7 @@ const Navbar = () => {
     <div className="bg-black text-white px-4 py-2"> 
       <div className="container mx-auto grid grid-cols-3 items-center">
       <div className="flex justify-start">
-        <img src="/src/components/Navigation/logo.svg" alt="Logo" width='125' />
+        <img src="/src/assets//logo.svg" alt="Logo" width='125' />
         </div>
         <div className="flex justify-center"> 
           <AnimatedTabs />

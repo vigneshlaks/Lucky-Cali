@@ -1,24 +1,26 @@
 import React from 'react';
 import ShinyButton from './ShinyButton';
+import { Button } from '../ui/button';
+import { Link } from 'react-router-dom';
 
 const EndNavigation = () => {
   return (
-    <div className="flex space-x-4"> {/* Add flex and space-x-4 for spacing */}
-      <ShinyButton text="Sign In" to="/auth/login" />
-      <ShinyButton 
-        text="Compete" 
-        to="/compete" 
-        backgroundColor="bg-red-500" 
-        textColor="text-red" 
-        maskColor="linear-mask"
-      />
-      <ShinyButton 
-        text="Spectate" 
-        to="/spectate" 
-        backgroundColor="bg-blue-500" 
-        textColor="text-blue" 
-        maskColor="linear-mask"
-      />
+    <div>
+      <Button variant="ringHover" className="font normal mr-2" size='sm' >
+        <Link to={"/auth/login"}>
+            {"Sign In"}
+        </Link>
+      </Button>
+      <Button variant="ringHoverRed" className="font normal mr-2" size='sm' >
+        <Link to={"/compete/"}>
+            {"Compete"}
+        </Link>
+      </Button>
+      <Button variant="ringHoverBlue" className="font normal " size='sm' >
+        <Link to={"/spectate"}>
+            {"Guide"}
+        </Link>
+      </Button>
     </div>
   );
 };

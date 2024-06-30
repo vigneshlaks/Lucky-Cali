@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactFlow, {
   Background,
   MiniMap,
@@ -20,7 +21,7 @@ const initialEdges = [
 ];
 
 const FlowDiagramHandstand = () => {
-  const [nodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
@@ -35,9 +36,7 @@ const FlowDiagramHandstand = () => {
         onConnect={onConnect}
         fitView
       >
-        <MiniMap />
         <Background variant="dots" gap={24} size={1} />
-        <Controls />
       </ReactFlow>
     </div>
   );
