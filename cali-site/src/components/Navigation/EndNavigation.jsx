@@ -1,5 +1,5 @@
 import React from 'react';
-import ShinyButton from './ShinyButton';
+import ShinyButton from '../../archive/ShinyButton';
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
 

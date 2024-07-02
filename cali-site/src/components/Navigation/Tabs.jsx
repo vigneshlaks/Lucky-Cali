@@ -1,7 +1,8 @@
 const tabs = [
-    { id: "dashboard", label: "Dashboard", path: "/" },
-    { id: "skilltree", label: "Skill Tree", path: "/flowdiagram" },
-    { id: "timeline", label: "Timeline", path: "/timeline" }
+    { id: "dashboard", label: "Dashboard", path: "/train" },
+    { id: "skilltree", label: "Skill Tree", path: "/train/flowdiagram" },
+    { id: "timeline", label: "Timeline", path: "/train/timeline" },
+    { id: "posts", label: "Posts", path: "/train/posts"}
   ];
   
   export default tabs;

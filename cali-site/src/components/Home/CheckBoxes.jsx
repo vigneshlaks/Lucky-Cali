@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const CheckBoxes = ({ challenges }) => {
   return (
-    <div className="space-y-4 mt-4">
+    <div className="flex space-x-4 mt-4">
       {challenges.map((challenge) => (
         <div key={challenge.id} className="flex items-center space-x-2">
           <Checkbox id={`challenge-${challenge.id}`} className="text-black text-2xl" />

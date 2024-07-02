@@ -4,10 +4,12 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    CardFooter
   } from "@/components/ui/card"
   import { Input } from "@/components/ui/input"
   import { Label } from "@/components/ui/label"
   import { Textarea } from "@/components/ui/textarea"
+  import { Button } from "../ui/button"
   
   export default function DiaryEntry() {
     const date = new Date();
@@ -20,7 +22,7 @@ import {
     let currentDate = `${day}-${month}-${year}`;
   
     return (
-      <Card>
+      <Card className='bg-black text-white'>
         <CardHeader>
           <CardTitle>Workout Log</CardTitle>
           <CardDescription>
@@ -34,7 +36,7 @@ import {
               <Input
                 id="name"
                 type="text"
-                className="w-full"
+                className="w-full bg-black text-white"
                 defaultValue={`${currentDate} Workout Log`}
               />
             </div>
@@ -42,12 +44,16 @@ import {
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
-                defaultValue={`Log Entry for ${currentDate}`}
-                className="min-h-32"
+                className="min-h-32 bg-black text-white"
               />
             </div>
           </div>
         </CardContent>
+        <CardFooter className="justify-center">
+          <Button variant="ringHover" className="mr-2">Submit</Button>
+          <Button variant="ringHover">Insight</Button>
+        </CardFooter>
+        
       </Card>
     )
   }

@@ -1,7 +1,8 @@
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { useLocation, useOutlet, Outlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import {useState, useReducer, useEffect} from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import Navbar from './components/Navigation/Navbar';
 import HomePage from './pages/HomePage';
 import FlowDiagram from './components/flowDiagrams/Landing';
@@ -11,8 +12,7 @@ import RegisterPage from './pages/Register';
 import LoginPage from './pages/LoginPage';
 import TimelinePage from './pages/TimelinePage';
 import tabs from './components/Navigation/Tabs';
-
-
+import PostsPage from './pages/PostsPage';
 
 const pageVariants = {
   initialRight: {
@@ -103,7 +103,6 @@ const AnimatedOutlet = () => {
   );
 };
 
-
 const LayoutWithNavbar = () => {
   return (
     <div className="layout-container">
@@ -115,27 +114,24 @@ const LayoutWithNavbar = () => {
 
 const LayoutWithoutNavbar = () => (
   <div className="layout-container">
-      <Outlet />
+    <Outlet />
   </div>
 );
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/train',
     element: <LayoutWithNavbar />,
     children: [
-      { 
-        index: true, 
-        element: 
-          <HomePage />
-         },
+      { index: true, element: <HomePage /> },
       { path: 'flowdiagram', element: <FlowDiagram /> },
       { path: 'flowdiagram/:nodeid', element: <InnerFlowDiagram /> },
       { path: 'timeline', element: <TimelinePage /> },
+      { path: 'posts', element: <PostsPage /> },
     ],
   },
   {
-    path: 'auth',
+    path: '/auth',
     element: <LayoutWithoutNavbar />,
     children: [
       { path: 'register', element: <RegisterPage /> },
