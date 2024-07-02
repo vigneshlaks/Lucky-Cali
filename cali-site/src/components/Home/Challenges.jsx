@@ -2,6 +2,7 @@ import React from 'react';
 import { CardHeader, Card, CardContent } from '../ui/card';
 import { Separator } from "@/components/ui/separator";
 import CheckBoxes from './CheckBoxes';
+import { Button } from '../ui/button';
 
 const Challenges = () => {
   const challenges = [
@@ -12,11 +13,13 @@ const Challenges = () => {
 
   return (
     <Card className="bg-black text-white">
-      <CardHeader>
-        <h2 className="text-4xl">Weekly Challenges</h2>
-      </CardHeader>
+
+      <div className="px-6 py-4 flex justify-between items-center">
+        <h2 className="text-xl font-bold">Weekly Challenges</h2>
+        <Button variant="ringHover">Reroll</Button>
+      </div>
       <CardContent>
-        <div>
+        <div className='flex flex-col items-center'>
           <Separator />
           <CheckBoxes challenges={challenges} />
         </div>

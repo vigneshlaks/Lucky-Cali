@@ -1,5 +1,5 @@
 import AnimatedTabs from './MiddleNavigation';
-import ShinyButton from './ShinyButton';
+import ShinyButton from '../../archive/ShinyButton';
 import EndNavigation from './EndNavigation';
 
 const Navbar = () => {
