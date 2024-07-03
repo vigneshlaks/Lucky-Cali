@@ -1,8 +1,8 @@
 import React from 'react';
-import { CardHeader, Card, CardContent } from '../ui/card';
+import { CardHeader, Card, CardContent } from '../../ui/card';
 import { Separator } from "@/components/ui/separator";
 import CheckBoxes from './CheckBoxes';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 const Challenges = () => {
   const challenges = [

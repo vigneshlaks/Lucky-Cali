@@ -1,14 +1,15 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import tabs from "./Tabs";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function AnimatedTabs() {
+function AnimatedTabs({ tabs }) {
   const location = useLocation();
 
   const findMatchingTab = (pathname) => {
     // Check for exact match first
-    let currentTab = tabs.find(tab => tab.path === pathname);
+    let currentTab = tabs.find((tab) => tab.path === pathname);
 
     if (!currentTab) {
       // If no exact match, check for parent paths
@@ -16,7 +17,7 @@ export default function AnimatedTabs() {
       while (pathSegments.length > 1 && !currentTab) {
         pathSegments.pop();
         const partialPath = pathSegments.join('/');
-        currentTab = tabs.find(tab => tab.path === partialPath);
+        currentTab = tabs.find((tab) => tab.path === partialPath);
       }
     }
 
@@ -57,3 +58,15 @@ export default function AnimatedTabs() {
     </div>
   );
 }
+
+AnimatedTabs.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
+
+export default AnimatedTabs;

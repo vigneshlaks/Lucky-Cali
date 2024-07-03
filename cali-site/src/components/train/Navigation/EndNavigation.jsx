@@ -1,6 +1,6 @@
 import React from 'react';
-import ShinyButton from '../../archive/ShinyButton';
-import { Button } from '../ui/button';
+import ShinyButton from '../../../archive/ShinyButton';
+import { Button } from '../../ui/button';
 import { Link } from 'react-router-dom';
 
 const EndNavigation = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PostCard from '@/components/Posts/PostCard';
+import PostCard from '@/components/train/Posts/PostCard';
 
 const PostsPage = () => {
   const posts = [

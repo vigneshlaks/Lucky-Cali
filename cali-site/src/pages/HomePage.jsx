@@ -1,7 +1,7 @@
-import CheckIn from '@/components/Home/CheckIn';
-import Challenges from '@/components/Home/Challenges';
-import DiaryEntry from '@/components/Home/WorkoutLog';
-import PlayerProfile from '@/components/Home/PlayerProfile';
+import CheckIn from '@/components/train/Home/CheckIn';
+import Challenges from '@/components/train/Home/Challenges';
+import DiaryEntry from '@/components/train/Home/WorkoutLog';
+import PlayerProfile from '@/components/train/Home/PlayerProfile';
 
 const HomePage = () => {
   return (
