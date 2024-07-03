@@ -1,23 +1,24 @@
-import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { useLocation, useOutlet, Outlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState, useReducer, useEffect } from 'react';
-import Navbar from './components/Navigation/Navbar';
+import { useReducer, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Navbar from './components/train/Navigation/Navbar';
 import HomePage from './pages/HomePage';
-import FlowDiagram from './components/flowDiagrams/Landing';
+import FlowDiagram from './components/train/flowDiagrams/Landing';
 import ErrorPage from './pages/ErrorPage';
-import InnerFlowDiagram from './components/flowDiagrams/Switch';
+import InnerFlowDiagram from './components/train/flowDiagrams/Switch';
 import RegisterPage from './pages/Register';
 import LoginPage from './pages/LoginPage';
 import TimelinePage from './pages/TimelinePage';
-import tabs from './components/Navigation/Tabs';
+import { competeTabs, trainTabs } from './components/train/Navigation/Tabs';
 import PostsPage from './pages/PostsPage';
+import WorkoutLogPage from './pages/WorkoutLogPage';
 
 const pageVariants = {
   initialRight: {
     opacity: 0,
-    x: "-100%",  // Start off-screen to the right
+    x: "100%",  // Start off-screen to the right
   },
   in: {
     opacity: 1,
@@ -25,16 +26,16 @@ const pageVariants = {
   },
   initialLeft: {
     opacity: 0,
-    x: "100%",  // Start off-screen to the left
+    x: "-100%",  // Start off-screen to the left
   },
 };
 
-const findTabIndex = (path) => {
+const findTabIndex = (tabs, path) => {
   return tabs.findIndex(tab => tab.path === path);
 };
 
 const initialState = {
-  prevIndex: findTabIndex(window.location.pathname),
+  prevIndex: findTabIndex(trainTabs, window.location.pathname),
   direction: 'right',
   changeDirection: true,
 };
@@ -58,13 +59,13 @@ const reducer = (state, action) => {
   }
 };
 
-const AnimatedOutlet = () => {
+const AnimatedOutlet = ({ tabs }) => {
   const location = useLocation();
   const element = useOutlet();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const currentIndex = findTabIndex(location.pathname);
+    const currentIndex = findTabIndex(tabs, location.pathname);
 
     if (currentIndex !== -1 && state.prevIndex !== -1) {
       if (currentIndex !== state.prevIndex) {
@@ -77,7 +78,7 @@ const AnimatedOutlet = () => {
     } else {
       dispatch({ type: 'DISABLE_DIRECTION' });
     }
-  }, [location.pathname]);
+  }, [location.pathname, tabs]);
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -103,13 +104,33 @@ const AnimatedOutlet = () => {
   );
 };
 
-const LayoutWithNavbar = () => {
+AnimatedOutlet.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
+
+const LayoutWithNavbar = ({ tabs }) => {
   return (
     <div className="layout-container">
-      <Navbar />
-      <AnimatedOutlet />
+      <Navbar tabs={tabs} />
+      <AnimatedOutlet tabs={tabs} />
     </div>
   );
+};
+
+LayoutWithNavbar.propTypes = {
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 const LayoutWithoutNavbar = () => (
@@ -121,13 +142,26 @@ const LayoutWithoutNavbar = () => (
 const router = createBrowserRouter([
   {
     path: '/train',
-    element: <LayoutWithNavbar />,
+    element: <LayoutWithNavbar tabs={trainTabs} />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'flowdiagram', element: <FlowDiagram /> },
       { path: 'flowdiagram/:nodeid', element: <InnerFlowDiagram /> },
       { path: 'timeline', element: <TimelinePage /> },
       { path: 'posts', element: <PostsPage /> },
+      { path: 'logs', element: <WorkoutLogPage /> }
+    ],
+  },
+  {
+    path: '/compete',
+    element: <LayoutWithNavbar tabs={competeTabs} />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'flowdiagram', element: <FlowDiagram /> },
+      { path: 'flowdiagram/:nodeid', element: <InnerFlowDiagram /> },
+      { path: 'timeline', element: <TimelinePage /> },
+      { path: 'posts', element: <PostsPage /> },
+      { path: 'logs', element: <WorkoutLogPage /> }
     ],
   },
   {

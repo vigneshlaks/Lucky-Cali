@@ -1,4 +1,4 @@
-import RegisterCard from '@/components/auth/RegisterCard';
+import RegisterCard from '@/components/train/auth/RegisterCard';
 
 const RegisterPage = () => {
   return (

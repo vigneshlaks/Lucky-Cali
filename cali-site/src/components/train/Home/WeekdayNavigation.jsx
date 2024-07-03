@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../ui/button"; // Ensure the import path is correct
+import { Button } from "../../ui/button"; // Ensure the import path is correct
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
