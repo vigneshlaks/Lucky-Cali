@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AnimatedTabs from './MiddleNavigation';
-import ShinyButton from '../../../archive/ShinyButton';
 import EndNavigation from './EndNavigation';
 
-const Navbar = ({ tabs }) => {
+const Navbar = ({ middleTabs, endTabs }) => {
   return (
     <div className="bg-black text-white px-4 py-2"> 
       <div className="container mx-auto grid grid-cols-3 items-center">
@@ -12,10 +11,10 @@ const Navbar = ({ tabs }) => {
           <img src="/src/assets/logo.svg" alt="Logo" width='125' />
         </div>
         <div className="flex justify-center"> 
-          <AnimatedTabs tabs={tabs} />
+          <AnimatedTabs tabs={middleTabs} />
         </div>
         <div className="flex justify-end">
-          <EndNavigation />
+          <EndNavigation tabs={endTabs} />
         </div>
       </div>
     </div>
@@ -23,7 +22,14 @@ const Navbar = ({ tabs }) => {
 };
 
 Navbar.propTypes = {
-  tabs: PropTypes.arrayOf(
+  middleTabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  endTabs: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       label: PropTypes.string.isRequired,
