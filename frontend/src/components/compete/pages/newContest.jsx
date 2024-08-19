@@ -1,15 +1,15 @@
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-    CardFooter,
-  } from '@/components/ui/card';
-  import { Label } from '@/components/ui/label';
-  import { Button } from '@/components/ui/button';
-  import { Checkbox } from '@/components/ui/checkbox';
-  import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+Card,
+CardContent,
+CardDescription,
+CardHeader,
+CardTitle,
+CardFooter,
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 const newContest = () => {
   return (
     <div>

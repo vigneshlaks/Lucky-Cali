@@ -21,20 +21,20 @@ passport.use(new LocalStrategy({ usernameField: 'username' }, async (username, p
     }
   }));
 
-  passport.use(new JwtStrategy({
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: jwtConfig.accessTokenSecret,
-    issuer: jwtConfig.issuer,
-    audience: jwtConfig.audience
-  }, async (jwt_payload, done) => {
-    try {
-      const user = await findUserById(jwt_payload.sub);
-      if (user) return done(null, user);
-      else return done(null, false);
-    } catch (err) {
-      return done(err, false);
-    }
-  }));
+passport.use(new JwtStrategy({
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: jwtConfig.accessTokenSecret,
+  issuer: jwtConfig.issuer,
+  audience: jwtConfig.audience
+}, async (jwt_payload, done) => {
+  try {
+    const user = await findUserById(jwt_payload.sub);
+    if (user) return done(null, user);
+    else return done(null, false);
+  } catch (err) {
+    return done(err, false);
+  }
+}));
 
 
 /*

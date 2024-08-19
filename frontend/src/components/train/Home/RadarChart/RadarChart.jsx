@@ -54,18 +54,6 @@ const calculateRadarChartData = (unlockedSkills) => {
   };
 };
 
-let defaultData = {
-  labels: ['Balance', 'Push', 'Pull', 'Legs', 'Conditioning'],
-  datasets: [
-    {
-      data: [0,0,0,0],
-      backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      borderColor: 'rgba(255, 255, 255, 1)',
-      borderWidth: 1,
-    },
-  ],
-};
-
 const radarChartOptions = {
   scales: {
     r: {
@@ -106,8 +94,6 @@ const RadarChart = () => {
   if (!chartData) {
     return <div>Loading...</div>;
   }
-
-  console.log(chartData)
 
   return (
     <div className="w-full h-full">
