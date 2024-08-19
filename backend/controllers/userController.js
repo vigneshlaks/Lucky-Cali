@@ -185,79 +185,20 @@ exports.getWorkoutLog = async (req, res) => {
       return res.status(404).json({ message: 'No workout log found for today' });
     }
 
-    const log = logResult[0];
+    let log = logResult[0];
+
+    // Convert BigInt values to strings (if necessary)
+    log = {
+      ...log,
+      id: log.id ? log.id.toString() : null,  // Assuming `id` is a BigInt field
+      user_id: log.user_id ? log.user_id.toString() : null  // Assuming `user_id` is a BigInt field
+    };
 
     // Respond with the workout log data
     res.json({ success: true, log });
   } catch (error) {
     console.error('Error fetching workout log data:', error);
     res.status(500).json({ message: 'An error occurred while fetching workout log data.' });
-  }
-};
-
-exports.createLog = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { title, description, date } = req.body; // Extract data from the request body
-
-    // Validate input data
-    if (!userId || !title || !description || !date) {
-      return res.status(400).json({ message: 'Invalid input data. Please provide all required fields.' });
-    }
-
-    // Check if a log already exists for today
-    const existingLog = await db.query(
-      `SELECT * FROM logs WHERE user_id = ? AND date = ?`,
-      [userId, date]
-    );
-
-    if (existingLog.length > 0) {
-      return res.status(400).json({ message: 'A workout log for today has already been created.' });
-    }
-
-    // Insert the new workout log into the database
-    const result = await db.query(
-      `INSERT INTO logs (user_id, title, description, date, created_at, updated_at)
-       VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-      [userId, title, description, date]
-    );
-
-    // Send a success response
-    res.json({ success: true, message: 'Workout log created successfully.' });
-  } catch (error) {
-    console.error('Error creating workout log:', error);
-    res.status(500).json({ message: 'An error occurred while creating the workout log.' });
-  }
-};
-
-exports.updateLog = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { title, description, date } = req.body; // Extract data from the request body
-
-    // Validate input data
-    if (!userId || !title || !description || !date) {
-      return res.status(400).json({ message: 'Invalid input data. Please provide all required fields.' });
-    }
-
-    // Update the workout log in the database
-    const result = await db.query(
-      `UPDATE logs
-       SET title = ?, description = ?, updated_at = CURRENT_TIMESTAMP
-       WHERE user_id = ? AND date = ?`,
-      [title, description, userId, date]
-    );
-
-    // Check if the log was updated
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Workout log not found for the specified date.' });
-    }
-
-    // Send a success response
-    res.json({ success: true, message: 'Workout log updated successfully.' });
-  } catch (error) {
-    console.error('Error updating workout log:', error);
-    res.status(500).json({ message: 'An error occurred while updating the workout log.' });
   }
 };
 
@@ -312,9 +253,6 @@ const generateChallengesBasedOnSkills = async (completedSkills) => {
 
   return selectedChallenges;
 };
-
-
-
 
 exports.getCompletedSkills = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, async (err, user, info) => {

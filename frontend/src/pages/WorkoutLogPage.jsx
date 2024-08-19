@@ -1,4 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import api from '@/components/shared/api'; // Assuming you have a configured Axios instance
 
 const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
@@ -7,13 +9,13 @@ const truncateText = (text, maxLength) => {
 
 const LogCard = ({ title, content, date }) => {
   return (
-    <div className="bg-black rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-white hover:scale-105 border border-white">
+    <div className="bg-gray-950 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-gray-700 hover:scale-105 border border-gray-800">
       <div className="p-6">
-        <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-        <p className="text-white mb-4 text-lg">{truncateText(content, 70)}</p> {/* Truncate content to 100 characters */}
+        <h3 className="text-2xl font-bold text-gray-100 mb-3">{title}</h3>
+        <p className="text-gray-400 mb-4 text-lg">{truncateText(content, 70)}</p>
       </div>
-      <div className="bg-white px-6 py-3 flex justify-end items-center">
-        <span className="text-sm text-black">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      <div className="bg-black px-6 py-3 flex justify-end items-center">
+        <span className="text-sm text-gray-500">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
       </div>
     </div>
   );
@@ -26,11 +28,37 @@ LogCard.propTypes = {
 };
 
 const WorkoutLogPage = () => {
-  const logs = [
-    { id: 1, title: 'Morning Workout', content: 'Ran 5 miles and did some stretching exercis sdafsdfsdfsdafasasdfsadfsadfsdafsadf sdfas f sadf saf asdf asd asfd asd fasdf asd fasd fad fas asdf as fsad fads', date: '2024-07-01' },
-    { id: 2, title: 'Afternoon Yoga', content: '1-hour intensive yoga session focusing on flexibility and balance.', date: '2024-07-01' },
-    { id: 3, title: 'Evening Gym', content: 'Weight lifting session targeting upper body and core muscles.', date: '2024-07-01' },
-  ];
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const response = await api.get('train/logs'); // Adjust this endpoint based on your backend
+        setLogs(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching workout logs:", error);
+        setError('Failed to fetch workout logs');
+        setLoading(false);
+      }
+    };
+
+    fetchLogs();
+  }, []);
+
+  if (loading) {
+    return <div className="bg-black text-white min-h-screen p-8 flex justify-center items-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="bg-black text-white min-h-screen p-8 flex justify-center items-center">{error}</div>;
+  }
+
+  if (logs.length === 0) {
+    return <div className="bg-black text-white min-h-screen p-8 flex justify-center items-center">No workout logs available.</div>;
+  }
 
   return (
     <div className="bg-black text-white min-h-screen p-8">

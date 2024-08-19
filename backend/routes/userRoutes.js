@@ -13,8 +13,4 @@ router.get('/goals', authenticateJWT, userController.getGoals);
 router.get('/challenges', authenticateJWT, userController.getChallenges);
 router.post('/rerollChallenges', authenticateJWT, userController.rerollChallenges);
 
-router.post('/create-log', authenticateJWT, userController.createLog);
-router.get('/get-log', authenticateJWT, userController.getWorkoutLog);
-router.put('/update-log', authenticateJWT, userController.updateLog);
-
 module.exports = router;

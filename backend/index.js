@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const competeRoutes = require('./routes/competeRoutes');
 const passport = require('passport');
+const trainRoutes = require('./routes/trainRoutes');
 const cookieParser = require('cookie-parser');
 require('./config/passport'); // Ensure passport configurations are loaded
 
@@ -31,6 +32,7 @@ app.use(passport.initialize());
 app.use('/homepage', homePageRoutes);
 app.use('/user', userRoutes);
 app.use('/auth', authRoutes);
+app.use('/train', trainRoutes);
 app.use('/compete', competeRoutes);
 
 // Start the server

@@ -19,6 +19,7 @@ import CalisthenicsProfile from './pages/ProfilePage';
 import { useAuth } from './components/shared/auth/AuthProvider';
 import ProtectedRoute from './components/shared/auth/ProtectedRoute';
 import LeadboardPage from './pages/LeadboardPage';
+import PostDetailsPage from './pages/PostDetailsPage';
 
 const pageVariants = {
   initialRight: {
@@ -190,6 +191,7 @@ const router = createBrowserRouter([
       { path: 'flowdiagram', element: <FlowDiagram /> },
       { path: 'flowdiagram/:nodeid', element: <InnerFlowDiagram /> },
       { path: 'posts', element: <PostsPage /> },
+      { path: 'posts/:id', element: <PostDetailsPage /> }, 
       { path: 'logs', element: <WorkoutLogPage /> },
       { path: 'profile', element: <ProtectedRoute> <CalisthenicsProfile /> </ProtectedRoute>}
     ],
