@@ -14,7 +14,7 @@ const workoutLogSchema = z.object({
 
 export default function WorkoutLog() {
   const currentDate = new Date().toLocaleDateString();
-  
+
   const [formValues, setFormValues] = useState({
     title: `${currentDate} Workout Log`,
     description: ''
@@ -25,8 +25,10 @@ export default function WorkoutLog() {
   useEffect(() => {
     const fetchExistingLog = async () => {
       try {
-        const response = await api.get(`/user/get-log`);
+        const response = await api.get(`/train/logs/today`)
+        console.log(response);
         if (response.data) {
+
           setFormValues({
             title: response.data.title || `${currentDate} Workout Log`,
             description: response.data.description || '',
@@ -49,7 +51,7 @@ export default function WorkoutLog() {
 
   const handleSubmit = async () => {
     const result = workoutLogSchema.safeParse(formValues);
-
+  
     if (!result.success) {
       const validationErrors = result.error.format();
       setErrors({
@@ -58,14 +60,29 @@ export default function WorkoutLog() {
       });
     } else {
       setErrors({ title: '', description: '' });
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+  
       try {
-        const response = await api.post('user/workout-log', {
-          title: formValues.title,
-          description: formValues.description,
-          date: new Date().toISOString().split('T')[0], // Send the current date in YYYY-MM-DD format
-        });
-
-        console.log("Workout log submitted:", response.data);
+        // First, check if a log for today already exists
+        const checkResponse = await api.get(`train/logs/today`);
+  
+        if (checkResponse.data) {
+          // If a log exists, make a PUT request to update it
+          const response = await api.put(`train/logs`, { 
+            title: formValues.title,
+            description: formValues.description,
+          });
+          console.log('Workout log updated:', response.data);
+        } else {
+          // If no log exists, make a POST request to create a new one
+          const response = await api.post('train/logs', {
+            title: formValues.title,
+            description: formValues.description,
+            date: today,
+          });
+          console.log('Workout log created:', response.data);
+        }
+  
         setSubmitted(true);
         // Optionally reset the form or navigate the user
       } catch (error) {
