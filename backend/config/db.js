@@ -41,22 +41,7 @@ const query = async (sql, params) => {
   }
 };
 
-const query1 = async (sql) => {
-  let conn;
-  try {
-    conn = await connectDB();
-    const result = await conn.query(sql);
-    return result;
-  } catch (err) {
-    console.error('Query execution failed:', err);
-    throw err;
-  } finally {
-    if (conn) conn.release();
-  }
-};
-
 module.exports = {
   connectDB,
   query,
-  query1
 };

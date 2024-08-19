@@ -1,6 +1,6 @@
 import CheckIn from '@/components/train/Home/CheckIn';
 import Challenges from '@/components/train/Home/Challenges';
-import DiaryEntry from '@/components/train/Home/WorkoutLog';
+import WorkoutLog from '@/components/train/Home/WorkoutLog';
 import PlayerProfile from '@/components/train/Home/PlayerProfile';
 
 const TrainHomePage = () => {
@@ -9,7 +9,7 @@ const TrainHomePage = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col space-y-5">
             <Challenges />
-            <DiaryEntry />
+            <WorkoutLog />
           </div>
           <div className="flex flex-col space-y-4">
           <CheckIn />
