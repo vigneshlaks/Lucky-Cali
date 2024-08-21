@@ -20,6 +20,7 @@ import { useAuth } from './components/shared/auth/AuthProvider';
 import ProtectedRoute from './components/shared/auth/ProtectedRoute';
 import LeadboardPage from './pages/LeadboardPage';
 import PostDetailsPage from './pages/PostDetailsPage';
+import LogDetailsPage from './pages/LogDetailsPage';
 
 const pageVariants = {
   initialRight: {
@@ -193,6 +194,7 @@ const router = createBrowserRouter([
       { path: 'posts', element: <PostsPage /> },
       { path: 'posts/:id', element: <PostDetailsPage /> }, 
       { path: 'logs', element: <WorkoutLogPage /> },
+      { path: 'logs/:id', element: <LogDetailsPage /> },
       { path: 'profile', element: <ProtectedRoute> <CalisthenicsProfile /> </ProtectedRoute>}
     ],
   },
