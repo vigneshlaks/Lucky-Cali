@@ -36,7 +36,6 @@ const calculateRadarChartData = (unlockedSkills) => {
     });
   });
 
-  // Normalize scores
   const normalizedScores = Object.values(totalScores).map(score => 
     skillCount > 0 ? Math.round((score / skillCount) * 2) : 0 // Multiply by 2 to scale to 0-10 range
   );
@@ -48,13 +47,15 @@ const calculateRadarChartData = (unlockedSkills) => {
         data: normalizedScores,
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
         borderColor: 'rgba(255, 255, 255, 1)',
-        borderWidth: 1,
+        borderWidth: 2,
       },
     ],
   };
 };
 
 const radarChartOptions = {
+  maintainAspectRatio: true,
+  responsive: true,
   scales: {
     r: {
       angleLines: {
@@ -97,7 +98,11 @@ const RadarChart = () => {
 
   return (
     <div className="w-full h-full">
-      <Radar data={chartData} options={radarChartOptions} />
+      <div className="relative" style={{ paddingBottom: '100%' }}>
+        <div className="absolute top-0 left-0 w-full h-full">
+          <Radar data={chartData} options={radarChartOptions} />
+        </div>
+      </div>
     </div>
   );
 };

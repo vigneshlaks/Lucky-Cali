@@ -22,6 +22,13 @@ const CustomNode = memo(({ data }) => {
               </div>
               <div className="flex items-center">
                 <RadioGroupItem 
+                  value="current" 
+                  id={`${skill.id}-current`}
+                  className="w-4 h-4 border-2 border-gray-300"
+                />
+              </div>
+              <div className="flex items-center">
+                <RadioGroupItem 
                   value="uncompleted" 
                   id={`${skill.id}-uncompleted`}
                   className="w-4 h-4 border-2 border-gray-300"

@@ -5,6 +5,7 @@ import CheckBoxes from './CheckBoxes';
 import { Button } from '../../ui/button';
 import api from '@/components/shared/api';
 import { skillsData } from '@/components/shared/skillsData';
+import { FiRefreshCw, FiCheck } from 'react-icons/fi';
 
 const generateRepsOrSeconds = (skillId) => {
   let skill = null;
@@ -54,7 +55,7 @@ const Challenges = () => {
   const handleReroll = async () => {
     try {
       setLoading(true);
-      const { data } = await api.post('/user/rerollChallenges'); // Assuming this is the correct endpoint
+      const { data } = await api.post('/user/rerollChallenges');
       const updatedChallenges = data.challenges.map(skillId => generateRepsOrSeconds(skillId));
       setChallenges(updatedChallenges || []);
     } catch (error) {
@@ -70,24 +71,44 @@ const Challenges = () => {
   };
 
   return (
-    <Card className="bg-black text-white">
-      <div className="px-6 py-4 flex justify-between items-center">
-        <h2 className="text-xl font-bold">Weekly Challenges</h2>
-        <div>
-          <Button variant="ringHover" className="mr-2" onClick={handleReroll}>Reroll</Button>
-          <Button variant="ringHover" onClick={handleSubmit}>Submit</Button>
+    <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden">
+      <div className="px-6 py-5 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Weekly Challenges</h2>
+        <div className="space-x-3">
+          <Button
+            variant="outline"
+            className="border-white hover:bg-white hover:text-black transition-colors duration-200"
+            onClick={handleReroll}
+            disabled={loading}
+          >
+            <FiRefreshCw className="mr-2" />
+            Reroll
+          </Button>
+          <Button
+            variant="default"
+            className="bg-white text-black hover:bg-gray-200 transition-colors duration-200"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            <FiCheck className="mr-2" />
+            Submit
+          </Button>
         </div>
       </div>
-      <Separator />
-      <CardContent className="pt-4">
+      <Separator className="bg-gray-800" />
+      <CardContent className="pt-6 pb-8 px-6">
         {error ? (
-          <div>Error: {error.message}</div>
+          <div className="text-red-400 text-center py-4">Error: {error.message}</div>
+        ) : loading ? (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-5 w-8 border-t-2 border-b-2 border-white"></div>
+          </div>
         ) : (
-          <CheckBoxes challenges={loading ? Array(3).fill('Loading...') : challenges} />
+          <CheckBoxes challenges={challenges} />
         )}
       </CardContent>
     </Card>
   );
-}
+};
 
 export default Challenges;

@@ -13,7 +13,6 @@ const createAnimatedEdge = (source, target) => ({
   id: `${source}-${target}`,
   source,
   target,
-
   animated: true,
   markerEnd: { type: MarkerType.ArrowClosed },
 });
@@ -38,30 +37,30 @@ const createNode = (id, label, x, y, level) => ({
 
 const generateNodesAndEdges = (data) => {
   let nodes = [
-    createNode('foundations', 'Foundations', 1000, 0, 0),
+    createNode('foundations', 'Foundations', 1000, 500, 0),
   
-    createNode('push', 'Push', 500, 150, 1),
-    createNode('pull', 'Pull', 1000, 150, 1),
-    createNode('legs', 'Legs', 1500, 150, 1),
+    createNode('push', 'Push', 500, 650, 1),
+    createNode('pull', 'Pull', 1000, 650, 1),
+    createNode('legs', 'Legs', 1500, 650, 1),
   
     // Upper Body Push
-    createNode('pushups', 'Pushups', 300, 300, 2),
-    createNode('dips', 'Dips', 500, 300, 2),
-    createNode('handstands', 'Handstands', 700, 300, 2),
+    createNode('pushups', 'Pushups', 300, 800, 2),
+    createNode('dips', 'Dips', 500, 800, 2),
+    createNode('handstands', 'Handstands', 700, 800, 2),
   
     // Upper Body Pull
-    createNode('pullups', 'Pullups', 900, 300, 2),
-    createNode('rows', 'Rows', 1100, 300, 2),
+    createNode('pullups', 'Pullups', 900, 800, 2),
+    createNode('rows', 'Rows', 1100, 800, 2),
   
     // Lower Body
-    createNode('squats', 'Squats', 1400, 300, 2),
-    createNode('lunges', 'Lunges', 1600, 300, 2),
+    createNode('squats', 'Squats', 1400, 800, 2),
+    createNode('lunges', 'Lunges', 1600, 800, 2),
   
     // Advanced Movements
-    createNode('planche', 'Planche', 300, 450, 3),
-    createNode('handstand-pushups', 'Handstand Pushups', 700, 450, 3),
-    createNode('muscle-up', 'Muscle Up', 900, 450, 3),
-    createNode('front-lever', 'Front Lever', 1100, 450, 3),
+    createNode('planche', 'Planche', 300, 950, 3),
+    createNode('handstand-pushups', 'Handstand Pushups', 700, 950, 3),
+    createNode('muscle-up', 'Muscle Up', 900, 950, 3),
+    createNode('front-lever', 'Front Lever', 1100, 950, 3),
   ];
   
 
@@ -85,16 +84,16 @@ const generateNodesAndEdges = (data) => {
     createAnimatedEdge('foundations', 'pull'),
     createAnimatedEdge('foundations', 'legs'),
     createAnimatedEdge('push', 'pushups'),
-    createStaticEdge('push', 'dips'),
+    createAnimatedEdge('push', 'dips'),
     createAnimatedEdge('push', 'handstands'),
-    createStaticEdge('pull', 'pullups'),
+    createAnimatedEdge('pull', 'pullups'),
     createAnimatedEdge('pull', 'rows'),
     createAnimatedEdge('legs', 'squats'),
-    createStaticEdge('legs', 'lunges'),
+    createAnimatedEdge('legs', 'lunges'),
     createAnimatedEdge('pushups', 'planche'),
-    createStaticEdge('handstands', 'handstand-pushups'),
+    createAnimatedEdge('handstands', 'handstand-pushups'),
     createAnimatedEdge('pullups', 'muscle-up'),
-    createStaticEdge('rows', 'front-lever'),
+    createAnimatedEdge('rows', 'front-lever'),
   ];
 
   return { nodes, edges };
@@ -128,7 +127,6 @@ const SkillTreeFlow = () => {
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 0.1 }} 
       >
         <Background />
       </ReactFlow>

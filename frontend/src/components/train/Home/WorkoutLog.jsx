@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../../ui/button";
 import { z } from "zod";
 import api from '@/components/shared/api'; // Assuming your API configuration is here
+import { Toaster, toast } from 'sonner';
 
 const workoutLogSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title can't exceed 100 characters"),
@@ -25,10 +26,8 @@ export default function WorkoutLog() {
   useEffect(() => {
     const fetchExistingLog = async () => {
       try {
-        const response = await api.get(`/train/logs/today`)
-        console.log(response);
+        const response = await api.get(`/train/logs/today`);
         if (response.data) {
-
           setFormValues({
             title: response.data.title || `${currentDate} Workout Log`,
             description: response.data.description || '',
@@ -51,7 +50,7 @@ export default function WorkoutLog() {
 
   const handleSubmit = async () => {
     const result = workoutLogSchema.safeParse(formValues);
-  
+
     if (!result.success) {
       const validationErrors = result.error.format();
       setErrors({
@@ -61,77 +60,83 @@ export default function WorkoutLog() {
     } else {
       setErrors({ title: '', description: '' });
       const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-  
+
       try {
-        // First, check if a log for today already exists
         const checkResponse = await api.get(`train/logs/today`);
-  
+
         if (checkResponse.data) {
-          // If a log exists, make a PUT request to update it
-          const response = await api.put(`train/logs`, { 
+          // Update existing log
+          const response = await api.put(`train/logs`, {
             title: formValues.title,
             description: formValues.description,
           });
+          toast.success('Log Updated!');
           console.log('Workout log updated:', response.data);
         } else {
-          // If no log exists, make a POST request to create a new one
+          // Create new log
           const response = await api.post('train/logs', {
             title: formValues.title,
             description: formValues.description,
             date: today,
           });
+          toast.success('Log Submitted!');
           console.log('Workout log created:', response.data);
         }
-  
+
         setSubmitted(true);
-        // Optionally reset the form or navigate the user
       } catch (error) {
         console.error("Error submitting workout log:", error.response?.data || error.message);
-        // Optionally show an error message to the user
       }
     }
   };
 
   return (
-    <Card className='bg-black text-white'>
-      <CardHeader>
+    <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden h-full flex flex-col">
+      <Toaster />
+      <div className="px-6 py-5 flex justify-between items-center border-b border-gray-800">
         <CardTitle>Workout Log</CardTitle>
         <CardDescription>State how today's workout went</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-7">
-          <div className="grid gap-4">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              type="text"
-              className="w-full bg-black text-white"
-              value={formValues.title}
-              onChange={handleChange}
-            />
-            {errors.title && <p className="text-red-500">{errors.title}</p>}
-          </div>
-          <div className="grid gap-4">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              className="min-h-32 bg-black text-white"
-              value={formValues.description}
-              onChange={handleChange}
-            />
-            {errors.description && <p className="text-red-500">{errors.description}</p>}
-          </div>
+      </div>
+      <CardContent className="flex-grow flex flex-col space-y-4 p-6">
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="title" className="text-lg font-medium">Title</Label>
+          <Input
+            id="title"
+            type="text"
+            className="w-full bg-black text-white rounded-md p-2 border border-gray-800 focus:border-white transition-colors"
+            value={formValues.title}
+            onChange={handleChange}
+          />
+          {errors.title && <p className="text-red-500">{errors.title}</p>}
+        </div>
+        <div className="flex flex-col flex-grow space-y-2">
+          <Label htmlFor="description" className="text-lg font-medium">Description</Label>
+          <Textarea
+            id="description"
+            className="flex-grow bg-black text-white rounded-md p-2 border border-gray-800 focus:border-white transition-colors resize-none"
+            value={formValues.description}
+            onChange={handleChange}
+          />
+          {errors.description && <p className="text-red-500">{errors.description}</p>}
         </div>
       </CardContent>
-      <CardFooter className="justify-center">
-        <Button variant="ringHover" className="mr-2" onClick={handleSubmit}>Submit</Button>
-        <Button variant="ringHover">Insight</Button>
+      <CardFooter className="justify-center py-4">
+        <div className="space-x-3">
+          <Button
+            variant="outline"
+            className="border-white hover:bg-white hover:text-black transition-colors duration-200"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="default"
+            className="bg-white text-black hover:bg-gray-200 transition-colors duration-200"
+          >
+            Insight
+          </Button>
+        </div>
       </CardFooter>
-      {submitted && (
-        <CardContent>
-          <p className="text-green-500">Workout log submitted successfully!</p>
-        </CardContent>
-      )}
     </Card>
   );
 }
