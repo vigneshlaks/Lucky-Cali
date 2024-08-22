@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import ReactFlow, { 
   Background, 
   applyEdgeChanges, 
@@ -9,6 +9,7 @@ import 'reactflow/dist/style.css';
 import CustomNode from './CustomNode';
 import { skillsData } from '../skillsData';
 
+// Helper function to create an animated edge
 const createAnimatedEdge = (source, target) => ({
   id: `${source}-${target}`,
   source,
@@ -17,14 +18,7 @@ const createAnimatedEdge = (source, target) => ({
   markerEnd: { type: MarkerType.ArrowClosed },
 });
 
-const createStaticEdge = (source, target) => ({
-  id: `${source}-${target}`,
-  source,
-  target,
-
-  markerEnd: { type: MarkerType.ArrowClosed },
-});
-
+// Helper function to create a node
 const createNode = (id, label, x, y, level) => ({
   id,
   type: 'custom',
@@ -35,36 +29,36 @@ const createNode = (id, label, x, y, level) => ({
   }
 });
 
-const generateNodesAndEdges = (data) => {
+// Function to generate nodes and edges based on skill data
+const generateNodesAndEdges = (data, skills, onStatusChange) => {
+  // Create initial nodes
   let nodes = [
     createNode('foundations', 'Foundations', 1000, 500, 0),
-  
     createNode('push', 'Push', 500, 650, 1),
     createNode('pull', 'Pull', 1000, 650, 1),
     createNode('legs', 'Legs', 1500, 650, 1),
-  
+
     // Upper Body Push
     createNode('pushups', 'Pushups', 300, 800, 2),
     createNode('dips', 'Dips', 500, 800, 2),
     createNode('handstands', 'Handstands', 700, 800, 2),
-  
+
     // Upper Body Pull
     createNode('pullups', 'Pullups', 900, 800, 2),
     createNode('rows', 'Rows', 1100, 800, 2),
-  
+
     // Lower Body
     createNode('squats', 'Squats', 1400, 800, 2),
     createNode('lunges', 'Lunges', 1600, 800, 2),
-  
+
     // Advanced Movements
     createNode('planche', 'Planche', 300, 950, 3),
     createNode('handstand-pushups', 'Handstand Pushups', 700, 950, 3),
     createNode('muscle-up', 'Muscle Up', 900, 950, 3),
     createNode('front-lever', 'Front Lever', 1100, 950, 3),
   ];
-  
 
-  // Merge skills from flowDiagramData into our nodes
+  // Merge skills from flowDiagramData into nodes
   nodes = nodes.map(node => {
     const categoryData = data[node.id];
     if (categoryData) {
@@ -72,13 +66,40 @@ const generateNodesAndEdges = (data) => {
         ...node,
         data: {
           ...node.data,
-          skills: categoryData.nodes
-        }
+          skills: categoryData.nodes,
+          onStatusChange
+        },
       };
     }
     return node;
   });
 
+  // Add skill status to nodes
+  nodes = nodes.map(node => {
+    // Iterate through the skills inside each node's data
+    const updatedSkills = node.data.skills.map(skill => {
+      // Find the corresponding skill status from the skills array passed as a prop
+      const skillStatus = skills.find(s => s.skill_id === skill.id) || { status: 3 };
+      
+      // Return the skill with the updated status
+      return {
+        ...skill,
+        status: skillStatus.status
+      };
+    });
+
+    // Return the node with updated skills
+    return {
+      ...node,
+      data: {
+        ...node.data,
+        skills: updatedSkills,
+        onStatusChange,
+      }
+    };
+  });
+
+  // Create edges
   const edges = [
     createAnimatedEdge('foundations', 'push'),
     createAnimatedEdge('foundations', 'pull'),
@@ -99,23 +120,31 @@ const generateNodesAndEdges = (data) => {
   return { nodes, edges };
 };
 
-const { nodes: initialNodes, edges: initialEdges } = generateNodesAndEdges(skillsData);
+// Main SkillTreeFlow component
+const SkillTreeFlow = ({ skills, onStatusChange }) => {
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
 
 
+  // Update nodes and edges when skills change
+  useEffect(() => {
+    const { nodes: updatedNodes, edges: updatedEdges } = generateNodesAndEdges(skillsData, skills, onStatusChange);
+    setNodes(updatedNodes);
+    setEdges(updatedEdges);
+  }, [skills]);
 
-const SkillTreeFlow = () => {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  // Memoize node types
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
+  // Callbacks for node and edge changes
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
+    []
   );
 
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
+    []
   );
 
   return (

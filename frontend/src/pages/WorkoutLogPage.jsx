@@ -47,7 +47,6 @@ const WorkoutLogPage = () => {
     const fetchLogs = async () => {
       try {
         const response = await api.get('train/logs');
-        console.log(response.data);
         setLogs(response.data);
         setLoading(false);
       } catch (error) {
@@ -75,7 +74,7 @@ const WorkoutLogPage = () => {
   return (
     <div className="bg-black text-white min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Workout Logs</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">Logs</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {logs.map(log => (
             <LogCard key={log.id} id ={log.id} title={log.title} content={log.description} date={log.date} />

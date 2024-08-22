@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -82,15 +82,16 @@ const radarChartOptions = {
   },
 };
 
-const RadarChart = () => {
+const RadarChart = ({ completedSkills: propCompletedSkills }) => {
+  const { completedSkills: hookCompletedSkills, loading, error } = useCompletedSkills();
   const [chartData, setChartData] = useState(null);
-  const { completedSkills, loading, error } = useCompletedSkills();
 
   useEffect(() => {
-    if (completedSkills.length > 0) {
-      setChartData(calculateRadarChartData(completedSkills));
+    const skillsToUse = propCompletedSkills || hookCompletedSkills;
+    if (skillsToUse.length > 0) {
+      setChartData(calculateRadarChartData(skillsToUse));
     }
-  }, [completedSkills]);
+  }, [propCompletedSkills, hookCompletedSkills]);
 
   if (!chartData) {
     return <div>Loading...</div>;

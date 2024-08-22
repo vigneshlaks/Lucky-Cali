@@ -12,7 +12,7 @@ export const CompletedSkillsProvider = ({ children }) => {
   useEffect(() => {
     const fetchCompletedSkills = async () => {
       try {
-        let { data } = await api.get('/user/completed-skills');
+        let { data } = await api.get('/user/skills');
     
         // Check if completedSkills is an array and has elements
         if (Array.isArray(data) && data.length > 0) {
