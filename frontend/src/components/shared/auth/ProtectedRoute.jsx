@@ -4,7 +4,6 @@ import { useAuth } from './AuthProvider';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth();
-  console.log(token)
   const location = useLocation();
 
   if (!token) {
