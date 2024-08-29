@@ -79,15 +79,16 @@ exports.getPosts = async (req, res) => {
       const logs = await db.query('SELECT * FROM logs WHERE user_id = ? AND date = ?', [userId, today]);
   
       if (logs.length === 0) {
-        return res.status(404).json({ message: 'No log found for today' });
+        return res.status(200).json({ log: null });
       }
-
-      res.json(logs[0]); // Assuming you only want one log for today
+  
+      res.status(200).json({ log: logs[0] }); // Return the log found for today
     } catch (error) {
       console.error('Error fetching today\'s workout log:', error);
       res.status(500).json({ message: 'An error occurred while fetching today\'s workout log.' });
     }
   };
+  
 
   exports.createLog = async (req, res) => {
     try {
