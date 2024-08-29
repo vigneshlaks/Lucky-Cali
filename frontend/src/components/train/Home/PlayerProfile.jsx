@@ -1,5 +1,5 @@
 import RadarChart from "./RadarChart/RadarChart";
-//import { progress } from '@/components/shared/utils';
+import gojoPNG from "../../../assets/gojo.png";
 
 const PlayerProfile = () => {
   const experience = {
@@ -10,33 +10,30 @@ const PlayerProfile = () => {
   const rank = 15;
 
   return (
-    <div className="flex flex-col w-full border rounded-lg border-white">
-      <div className="flex h-full">
-        <div className="flex-1 rounded-lg flex items-center justify-center">
-          <div className="text-white text-2xl font-bold">Place Holder</div>
-        </div>
-        <div className="border-l border-white"></div>
-        <div className="flex-1 p-6">
-          <RadarChart />
-        </div>
-      </div>
-      <div className="border-t border-white"></div>
-      <div className="flex flex-row p-6 rounded-lg items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="text-white text-lg font-medium">Experience:</div>
-          <div className="flex items-center">
-            <div className="bg-white rounded-full h-4 w-40 mr-2">
-              <div
-                className="bg-blue-500 h-full rounded-full"
-                style={{ width: `${experience.progress}%` }}
-              ></div>
+    <div className="bg-black text-white border shadow-lg rounded-lg overflow-hidden">
+      <div className="px-6 py-5 flex justify-between items-center border-b border-gray-800">
+        <h2 className="text-2xl font-bold">Player Profile</h2>
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-2">
+            <div className="text-white text-lg font-medium">Experience:</div>
+            <div className="flex items-center">
+              <div className="text-white text-lg">{experience.level}</div>
             </div>
-            <div className="text-white text-lg">{experience.level}</div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="text-white text-lg font-medium">Rank:</div>
+            <div className="text-white text-lg">{rank}</div>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="text-white text-lg font-medium">Rank:</div>
-          <div className="text-white text-lg">{rank}</div>
+      </div>
+      <div className="p-0 flex">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <img src={gojoPNG} alt="Gojo" width="230" className="rounded-lg" />
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <RadarChart />
         </div>
       </div>
     </div>

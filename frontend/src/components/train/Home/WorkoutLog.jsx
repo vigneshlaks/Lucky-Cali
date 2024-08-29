@@ -4,14 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../../ui/button";
-import { z } from "zod";
 import api from '@/components/shared/api'; // Assuming your API configuration is here
 import { Toaster, toast } from 'sonner';
-
-const workoutLogSchema = z.object({
-  title: z.string().min(1, "Title is required").max(100, "Title can't exceed 100 characters"),
-  description: z.string().min(1, "Description is required").max(1000, "Description can't exceed 1000 characters"),
-});
 
 export default function WorkoutLog() {
   const currentDate = new Date().toLocaleDateString();
@@ -20,17 +14,17 @@ export default function WorkoutLog() {
     title: `${currentDate} Workout Log`,
     description: ''
   });
-  const [errors, setErrors] = useState({ title: '', description: '' });
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchExistingLog = async () => {
       try {
         const response = await api.get(`/train/logs/today`);
-        if (response.data) {
+        console.log(response)
+        if (response.data.log) {
           setFormValues({
-            title: response.data.title || `${currentDate} Workout Log`,
-            description: response.data.description || '',
+            title: response.data.log.title || `${currentDate} Workout Log`,
+            description: response.data.log.description || '',
           });
         }
       } catch (error) {
@@ -49,46 +43,37 @@ export default function WorkoutLog() {
   };
 
   const handleSubmit = async () => {
-    const result = workoutLogSchema.safeParse(formValues);
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
-    if (!result.success) {
-      const validationErrors = result.error.format();
-      setErrors({
-        title: validationErrors.title?._errors[0] || '',
-        description: validationErrors.description?._errors[0] || '',
-      });
-    } else {
-      setErrors({ title: '', description: '' });
-      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-
-      try {
-        const checkResponse = await api.get(`train/logs/today`);
-
-        if (checkResponse.data) {
-          // Update existing log
-          const response = await api.put(`train/logs`, {
-            title: formValues.title,
-            description: formValues.description,
-          });
-          toast.success('Log Updated!');
-          console.log('Workout log updated:', response.data);
+    try {
+        // Check if a log for today exists
+        const checkResponse = await api.get('train/logs/today');
+        console.log("WAAA");
+        console.log(checkResponse);
+        if (checkResponse.data && checkResponse.data.log) {
+            // Update the existing log
+            const response = await api.put('train/logs', {
+                title: formValues.title,
+                description: formValues.description,
+            });
+            toast.success('Log Updated!');
+            console.log('Workout log updated:', response.data);
         } else {
-          // Create new log
-          const response = await api.post('train/logs', {
-            title: formValues.title,
-            description: formValues.description,
-            date: today,
-          });
-          toast.success('Log Submitted!');
-          console.log('Workout log created:', response.data);
+            // Create a new log
+            const response = await api.post('train/logs', {
+                title: formValues.title,
+                description: formValues.description,
+                date: today,
+            });
+            toast.success('Log Submitted!');
+            console.log('Workout log created:', response.data);
         }
 
         setSubmitted(true);
-      } catch (error) {
+    } catch (error) {
         console.error("Error submitting workout log:", error.response?.data || error.message);
-      }
     }
-  };
+};
 
   return (
     <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden h-full flex flex-col">
@@ -107,7 +92,6 @@ export default function WorkoutLog() {
             value={formValues.title}
             onChange={handleChange}
           />
-          {errors.title && <p className="text-red-500">{errors.title}</p>}
         </div>
         <div className="flex flex-col flex-grow space-y-2">
           <Label htmlFor="description" className="text-lg font-medium">Description</Label>
@@ -117,7 +101,6 @@ export default function WorkoutLog() {
             value={formValues.description}
             onChange={handleChange}
           />
-          {errors.description && <p className="text-red-500">{errors.description}</p>}
         </div>
       </CardContent>
       <CardFooter className="justify-center py-4">
