@@ -46,7 +46,7 @@ const CalisthenicsProfile = () => {
           return [...prevSkills, { skill_id: skillId, status: newStatus }];
         }
       });
-
+  
     } catch (error) {
       console.error('Failed to update skill status:', error);
       // Optionally, you can set an error state or show a notification to the user
