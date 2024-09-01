@@ -287,6 +287,36 @@ exports.getCompletedSkills = (req, res, next) => {
   })(req, res, next);
 };
 
+exports.updateSkillStatus = async (req, res) => {
+  const { skillId } = req.params;
+  const { status } = req.body;
+  const userId = req.user.id;
+
+  // Validate the new status
+  if (![1, 2, 3].includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  try {
+    // Update the skill status in the database
+    const result = await db.query(
+      `UPDATE user_skills 
+       SET status = ? 
+       WHERE skill_id = ? AND user_id = ?`,
+      [status, skillId, userId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Skill not found or not associated with the user' });
+    }
+
+    res.status(200).json({ message: 'Skill status updated successfully' });
+  } catch (error) {
+    console.error('Error updating skill status:', error);
+    res.status(500).json({ message: 'An error occurred while updating the skill status.' });
+  }
+};
+
 
 exports.getAllSkills = async (req, res, next) => {
   try {

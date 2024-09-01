@@ -173,11 +173,11 @@ export const skillsData = {
       { source: 'l-dip', target: 'russian-dip' }
     ]
   },
-  levers: {
+  frontLever: {
     nodes: [
       {
-        id: 'tuck-bl',
-        label: 'Tuck Back Lever',
+        id: 'tuck-fl',
+        label: 'Tuck Front Lever',
         x: ROOT_X,
         y: ROOT_Y,
         level: 1,
@@ -185,8 +185,8 @@ export const skillsData = {
         type: 'static'
       },
       {
-        id: 'adv-tuck-bl',
-        label: 'Advanced Tuck Back Lever',
+        id: 'adv-tuck-fl',
+        label: 'Advanced Tuck Front Lever',
         x: ROOT_X - X_SPACING,
         y: LEVEL_2_Y,
         level: 2,
@@ -194,58 +194,29 @@ export const skillsData = {
         type: 'static'
       },
       {
-        id: 'straddle-bl',
-        label: 'Straddle Back Lever',
+        id: 'straddle-fl',
+        label: 'Straddle Front Lever',
         x: ROOT_X - X_SPACING,
         y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 4, pull: 4, push: 0, legs: 2, conditioning: 3 },
-        type: 'static'
-      },
-      {
-        id: 'full-bl',
-        label: 'Full Back Lever',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_4_Y,
-        level: 4,
-        scores: { balance: 5, pull: 5, push: 0, legs: 3, conditioning: 4 },
-        type: 'static'
-      },
-      {
-        id: 'tuck-fl',
-        label: 'Tuck Front Lever',
-        x: ROOT_X + X_SPACING,
-        y: LEVEL_2_Y,
-        level: 2,
-        scores: { balance: 2, pull: 2, push: 0, legs: 1, conditioning: 1 },
-        type: 'static'
-      },
-      {
-        id: 'adv-tuck-fl',
-        label: 'Advanced Tuck Front Lever',
-        x: ROOT_X + X_SPACING,
-        y: LEVEL_3_Y,
-        level: 3,
-        scores: { balance: 3, pull: 3, push: 0, legs: 1, conditioning: 2 },
         type: 'static'
       },
       {
         id: 'full-fl',
         label: 'Full Front Lever',
-        x: ROOT_X + X_SPACING,
+        x: ROOT_X - X_SPACING,
         y: LEVEL_4_Y,
         level: 4,
-        scores: { balance: 4, pull: 4, push: 0, legs: 2, conditioning: 3 },
+        scores: { balance: 5, pull: 5, push: 0, legs: 3, conditioning: 4 },
         type: 'static'
       }
     ],
     edges: [
-      { source: 'tuck-bl', target: 'adv-tuck-bl' },
-      { source: 'adv-tuck-bl', target: 'straddle-bl' },
-      { source: 'straddle-bl', target: 'full-bl' },
-      { source: 'tuck-bl', target: 'tuck-fl' },
       { source: 'tuck-fl', target: 'adv-tuck-fl' },
-      { source: 'adv-tuck-fl', target: 'full-fl' }
+    { source: 'adv-tuck-fl', target: 'straddle-fl' },
+    { source: 'straddle-fl', target: 'full-fl' },
     ]
   },
+  
 }

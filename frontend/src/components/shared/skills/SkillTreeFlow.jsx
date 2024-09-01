@@ -14,7 +14,7 @@ import PlayerProfileNode from './PlayerProfileNode';
 // Helper function to create an animated edge
 const createAnimatedEdge = (source, target) => ({
   id: `${source}-${target}`,
-  source,
+source,
   target,
   animated: true,
   markerEnd: { type: MarkerType.ArrowClosed },
@@ -33,37 +33,41 @@ const createNode = (id, label, x, y, level, type = 'custom') => ({
 
 // Function to generate nodes and edges based on skill data
 const generateNodesAndEdges = (data, skills, onStatusChange) => {
-  // Create initial nodes
+  // Create initial nodes with adjusted positions for aesthetic appeal
   let nodes = [
-    createNode('player-profile', 'Player Profile', 1000, 50, 0, 'playerProfile'),
-
-    createNode('foundations', 'Foundations', 1000, 500, 0),
-    createNode('push', 'Push', 500, 650, 1),
-    createNode('pull', 'Pull', 1000, 650, 1),
-    createNode('legs', 'Legs', 1500, 650, 1),
-
-    // Upper Body Push
-    createNode('pushups', 'Pushups', 300, 800, 2),
-    createNode('dips', 'Dips', 500, 800, 2),
-    createNode('handstands', 'Handstands', 700, 800, 2),
-
-    // Upper Body Pull
+    // Player Profile in the top left corner
+    createNode('player-profile', 'Player Profile', 50, 50, 0, 'playerProfile'),
+  
+    // Main Categories spaced with more vertical and horizontal room
+    createNode('foundations', 'Foundations', 1000, 200, 0),
+  
+    // Main Categories (Push, Pull, Legs) positioned below Foundations with increased spacing
+    createNode('push', 'Push', 375, 500, 1),
+    createNode('pull', 'Pull', 1050, 500, 1),
+    createNode('legs', 'Legs', 1500, 500, 1),
+  
+    // Upper Body Push nodes directly below Push with increased vertical spacing
+    createNode('pushups', 'Pushups', 0, 800, 2),
+    createNode('dips', 'Dips', 300, 800, 2),
+    createNode('handstands', 'Handstands', 600, 800, 2),
+  
+    // Upper Body Pull nodes directly below Pull with increased vertical spacing
     createNode('pullups', 'Pullups', 900, 800, 2),
-    createNode('rows', 'Rows', 1100, 800, 2),
-
-    // Lower Body
+    createNode('rows', 'Rows', 1200, 800, 2),
+  
+    // Lower Body nodes directly below Legs with increased vertical spacing
     createNode('squats', 'Squats', 1400, 800, 2),
     createNode('lunges', 'Lunges', 1600, 800, 2),
-
-    // Advanced Movements
-    createNode('planche', 'Planche', 300, 950, 3),
-    createNode('handstand-pushups', 'Handstand Pushups', 700, 950, 3),
-    createNode('muscle-up', 'Muscle Up', 900, 950, 3),
-    createNode('front-lever', 'Front Lever', 1100, 950, 3),
+  
+    // Advanced Movements spaced further below respective categories with increased vertical spacing
+    createNode('planche', 'Planche', 70, 1100, 3),             
+    createNode('handstandPushups', 'Handstand Pushups', 630, 1100, 3), 
+    createNode('muscleUp', 'Muscle Up', 971, 1100, 3),           
+    createNode('frontLever', 'Front Lever', 1200, 1100, 3),      
   ];
 
 
-  console.log(skills);
+
   // Merge skills from flowDiagramData into nodes
   nodes = nodes.map(node => {
     if (node.type === 'playerProfile') {
@@ -71,8 +75,7 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
         ...node,
         data: {
           ...node.data,
-          skills, // Pass the full skills array to the PlayerProfileNode
-          onStatusChange, // Pass the status change handler
+          skills,
         }
       };
     }
@@ -84,7 +87,6 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
         data: {
           ...node.data,
           skills: categoryData.nodes,
-          onStatusChange
         },
       };
     }
@@ -116,7 +118,6 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
       data: {
         ...node.data,
         skills: updatedSkills,
-        onStatusChange,
       },
     };
   });
@@ -144,14 +145,14 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
 };
 
 // Main SkillTreeFlow component
-const SkillTreeFlow = ({ skills, onStatusChange }) => {
+const SkillTreeFlow = ({ skills }) => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
 
   // Update nodes and edges when skills change
   useEffect(() => {
-    const { nodes: updatedNodes, edges: updatedEdges } = generateNodesAndEdges(skillsData, skills, onStatusChange);
+    const { nodes: updatedNodes, edges: updatedEdges } = generateNodesAndEdges(skillsData, skills);
     setNodes(updatedNodes);
     setEdges(updatedEdges);
   }, [skills]);

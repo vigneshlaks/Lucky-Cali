@@ -1,17 +1,21 @@
 import { memo, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useSkillContext } from '../SkillContext';
 
 const CustomNode = memo(({ data }) => {
   const [skills, setSkills] = useState(data.skills);
-  const { onStatusChange } = data;
+  const { updateSkillStatus } = useSkillContext();
 
   const handleStatusChange = (id, newStatus) => {
+    // Update the status locally in the state
     const updatedSkills = skills.map((skill) => 
       skill.id === id ? { ...skill, status: newStatus } : skill
     );
-    setSkills(updatedSkills);
-    onStatusChange(id, newStatus);
+    setSkills(updatedSkills);  // Trigger a re-render with the new status
+  
+    // Update the status in the context (which might also update the backend)
+    updateSkillStatus(id, newStatus);
   };
 
   return (
