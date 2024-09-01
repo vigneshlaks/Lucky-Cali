@@ -26,16 +26,18 @@ const PlayerProfile = () => {
           </div>
         </div>
       </div>
-      <div className="p-0 flex">
-        <div className="flex-1 flex items-center justify-center">
+      <div className="flex-grow flex p-0">
+        <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
-            <img src={gojoPNG} alt="Gojo" width="230" className="rounded-lg" />
+            <img src={gojoPNG} alt="Gojo" className="rounded-lg max-w-full h-auto" style={{maxHeight: '210px'}} />
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center">
-          <RadarChart />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full h-full max-w-[300px] max-h-[300px]">
+            <RadarChart />
+          </div>
+          </div>
         </div>
-      </div>
     </div>
   );
 };

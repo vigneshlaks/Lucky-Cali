@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import ReactFlow, { 
   Background, 
@@ -8,6 +9,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import CustomNode from './CustomNode';
 import { skillsData } from '../skillsData';
+import PlayerProfileNode from './PlayerProfileNode';
 
 // Helper function to create an animated edge
 const createAnimatedEdge = (source, target) => ({
@@ -19,20 +21,22 @@ const createAnimatedEdge = (source, target) => ({
 });
 
 // Helper function to create a node
-const createNode = (id, label, x, y, level) => ({
+const createNode = (id, label, x, y, level, type = 'custom') => ({
   id,
-  type: 'custom',
+  type, // Node type, default to 'custom' unless specified
   position: { x, y },
   data: {
     category: label,
-    skills: []
-  }
+    skills: [],
+  },
 });
 
 // Function to generate nodes and edges based on skill data
 const generateNodesAndEdges = (data, skills, onStatusChange) => {
   // Create initial nodes
   let nodes = [
+    createNode('player-profile', 'Player Profile', 1000, 50, 0, 'playerProfile'),
+
     createNode('foundations', 'Foundations', 1000, 500, 0),
     createNode('push', 'Push', 500, 650, 1),
     createNode('pull', 'Pull', 1000, 650, 1),
@@ -58,8 +62,21 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
     createNode('front-lever', 'Front Lever', 1100, 950, 3),
   ];
 
+
+  console.log(skills);
   // Merge skills from flowDiagramData into nodes
   nodes = nodes.map(node => {
+    if (node.type === 'playerProfile') {
+      return {
+        ...node,
+        data: {
+          ...node.data,
+          skills, // Pass the full skills array to the PlayerProfileNode
+          onStatusChange, // Pass the status change handler
+        }
+      };
+    }
+
     const categoryData = data[node.id];
     if (categoryData) {
       return {
@@ -74,17 +91,22 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
     return node;
   });
 
-  // Add skill status to nodes
+  // Add skill status to nodes, skipping the 'playerProfile' type
   nodes = nodes.map(node => {
+    // Skip updating skills for the playerProfile node
+    if (node.type === 'playerProfile') {
+      return node;
+    }
+
     // Iterate through the skills inside each node's data
     const updatedSkills = node.data.skills.map(skill => {
       // Find the corresponding skill status from the skills array passed as a prop
       const skillStatus = skills.find(s => s.skill_id === skill.id) || { status: 3 };
-      
+
       // Return the skill with the updated status
       return {
         ...skill,
-        status: skillStatus.status
+        status: skillStatus.status,
       };
     });
 
@@ -95,9 +117,10 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
         ...node.data,
         skills: updatedSkills,
         onStatusChange,
-      }
+      },
     };
   });
+
 
   // Create edges
   const edges = [
@@ -133,8 +156,15 @@ const SkillTreeFlow = ({ skills, onStatusChange }) => {
     setEdges(updatedEdges);
   }, [skills]);
 
+
   // Memoize node types
-  const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
+  const nodeTypes = useMemo(
+    () => ({
+      custom: CustomNode,
+      playerProfile: PlayerProfileNode,
+    }),
+    []
+  );
 
   // Callbacks for node and edge changes
   const onNodesChange = useCallback(

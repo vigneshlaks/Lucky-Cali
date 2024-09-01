@@ -286,3 +286,28 @@ exports.getCompletedSkills = (req, res, next) => {
     }
   })(req, res, next);
 };
+
+
+exports.getAllSkills = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    try {
+      // Fetch all skills associated with the authenticated user
+      const allSkills = await db.query(
+        `SELECT *
+         FROM user_skills u
+         WHERE u.user_id = ?`,
+        [userId]
+      );
+
+      res.json(allSkills);
+    } catch (error) {
+      console.error('Error fetching user skills:', error);
+      res.status(500).json({ message: 'An error occurred while fetching user skills.' });
+    }
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    res.status(500).json({ message: 'An unexpected error occurred.' });
+  }
+};

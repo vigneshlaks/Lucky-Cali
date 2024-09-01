@@ -1,14 +1,11 @@
-/* eslint-disable react/prop-types */
 import { memo, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const CustomNode = memo(({ data }) => {
-  // Local state to manage the skills
   const [skills, setSkills] = useState(data.skills);
   const { onStatusChange } = data;
 
-  // Handler to update the status of a skill
   const handleStatusChange = (id, newStatus) => {
     const updatedSkills = skills.map((skill) => 
       skill.id === id ? { ...skill, status: newStatus } : skill
@@ -18,13 +15,13 @@ const CustomNode = memo(({ data }) => {
   };
 
   return (
-    <div className="custom-node p-4 rounded-md bg-white border border-gray-200 shadow-md">
+    <div className="custom-node p-4 rounded-lg bg-black text-white border border-gray-800 shadow-lg overflow-hidden">
       <Handle type="target" position={Position.Top} />
       <div className="node-content">
-        <h3 className="text-lg mb-3 text-black">{data.category}</h3>
+        <h3 className="text-lg mb-3 font-semibold border-b border-gray-800 pb-2">{data.category}</h3>
         {skills.map((skill) => (
           <div key={skill.id} className="skill-row flex items-center justify-between mb-2">
-            <span className="skill-label text-sm text-black mr-4">{skill.label}</span>
+            <span className="skill-label text-sm text-gray-400 mr-4">{skill.label}</span>
             <RadioGroup 
               value={getSkillStatusValue(skill.status)} 
               onValueChange={(value) => handleStatusChange(skill.id, getSkillStatusFromValue(value))}
@@ -34,21 +31,21 @@ const CustomNode = memo(({ data }) => {
                 <RadioGroupItem 
                   value="uncompleted" 
                   id={`${skill.id}-uncompleted`}
-                  className="w-4 h-4 border-2 border-gray-300"
+                  className="w-4 h-4 border-2 border-gray-700 text-gray-600 focus:border-gray-500"
                 />
               </div>
               <div className="flex items-center">
                 <RadioGroupItem 
                   value="current" 
                   id={`${skill.id}-current`}
-                  className="w-4 h-4 border-2 border-gray-500"
+                  className="w-4 h-4 border-2 border-gray-500 text-gray-400 focus:border-gray-300"
                 />
               </div>
               <div className="flex items-center">
                 <RadioGroupItem 
                   value="completed" 
                   id={`${skill.id}-completed`}
-                  className="w-4 h-4 border-2 border-gray-800"
+                  className="w-4 h-4 border-2 border-gray-300 text-white focus:border-gray-100"
                 />
               </div>
             </RadioGroup>
@@ -60,29 +57,21 @@ const CustomNode = memo(({ data }) => {
   );
 });
 
-// Helper function to get the status value for the RadioGroup
 const getSkillStatusValue = (status) => {
   switch (status) {
-    case 1:
-      return 'completed';
-    case 2:
-      return 'current';
+    case 1: return 'completed';
+    case 2: return 'current';
     case 3:
-    default:
-      return 'uncompleted';
+    default: return 'uncompleted';
   }
 };
 
-// Helper function to get the status code from the RadioGroup value
 const getSkillStatusFromValue = (value) => {
   switch (value) {
-    case 'completed':
-      return 1;
-    case 'current':
-      return 2;
+    case 'completed': return 1;
+    case 'current': return 2;
     case 'uncompleted':
-    default:
-      return 3;
+    default: return 3;
   }
 };
 
