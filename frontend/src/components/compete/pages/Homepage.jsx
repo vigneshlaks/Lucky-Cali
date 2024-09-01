@@ -15,7 +15,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { toast } from "@/components/ui/use-toast";
-import { useCompletedSkills } from '@/components/shared/skills/SkillProvider';
 import { skillsData } from '@/components/shared/skillsData';
 
 

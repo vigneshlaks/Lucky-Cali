@@ -20,7 +20,6 @@ export default function WorkoutLog() {
     const fetchExistingLog = async () => {
       try {
         const response = await api.get(`/train/logs/today`);
-        console.log(response)
         if (response.data.log) {
           setFormValues({
             title: response.data.log.title || `${currentDate} Workout Log`,

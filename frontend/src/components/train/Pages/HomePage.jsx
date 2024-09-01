@@ -7,12 +7,12 @@ const TrainHomePage = () => {
   return (
     <div className="bg-black text-white p-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex flex-col space-y-5 grow">
-          <Challenges />
-          <PlayerProfile />
+        <div className="flex flex-col space-y-5">
+          <Challenges className="flex-grow" />
+          <PlayerProfile className="flex-grow" />
         </div>
-        <div className="flex flex-col space-y-5 grow">
-          <WorkoutLog />
+        <div className="flex flex-col space-y-5">
+          <WorkoutLog className="flex-grow" />
         </div>
       </div>
     </div>

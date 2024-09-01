@@ -23,6 +23,26 @@ exports.getPosts = async (req, res) => {
     }
   };
 
+  exports.getLogById = async (req, res) => {
+    try {
+      const logId = req.params.id;
+      
+      // Query to get the log by ID
+      const logs = await db.query('SELECT * FROM logs WHERE id = ?', [logId]);
+  
+      // If no log is found, return a 404 error
+      if (logs.length === 0) {
+        return res.status(404).json({ message: 'Log not found' });
+      }
+  
+      // Respond with the log data
+      res.json(logs[0]);
+    } catch (error) {
+      console.error('Error fetching log by ID:', error);
+      res.status(500).json({ message: 'An error occurred while fetching the log.' });
+    }
+  };
+
   exports.getPostById = async (req, res) => {
     try {
       const { id } = req.params;
