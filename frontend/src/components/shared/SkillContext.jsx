@@ -32,7 +32,6 @@ export const SkillProvider = ({ children }) => {
     try {
       // Make an API call to update the skill status
       await api.put(`user/skills/${skillId}`, { status: newStatus });
-      console.log("got here")
       // Update the local state to reflect the change
       setSkills((prevSkills) =>
         prevSkills.map((skill) =>

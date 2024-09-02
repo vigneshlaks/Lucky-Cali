@@ -6,13 +6,15 @@ import { useSkillContext } from '../SkillContext';
 const CustomNode = memo(({ data }) => {
   const [skills, setSkills] = useState(data.skills);
   const { updateSkillStatus } = useSkillContext();
-
+  
   const handleStatusChange = (id, newStatus) => {
+    
     // Update the status locally in the state
     const updatedSkills = skills.map((skill) => 
       skill.id === id ? { ...skill, status: newStatus } : skill
     );
-    setSkills(updatedSkills);  // Trigger a re-render with the new status
+
+    setSkills(updatedSkills); 
   
     // Update the status in the context (which might also update the backend)
     updateSkillStatus(id, newStatus);

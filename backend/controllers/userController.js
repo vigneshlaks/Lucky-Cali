@@ -105,8 +105,8 @@ exports.getObjectives = async (req, res) => {
 
     // Construct the response data
     const responseData = {
-      goals: [user.goal1, user.goal2, user.goal3].filter(Boolean), // Remove null or undefined values
-      challenges: [user.challenge1, user.challenge2, user.challenge3].filter(Boolean), // Remove null or undefined values
+      goals: [user.goal1, user.goal2, user.goal3].filter(Boolean), 
+      challenges: [user.challenge1, user.challenge2, user.challenge3].filter(Boolean),
     };
 
     res.json(responseData);
@@ -291,6 +291,8 @@ exports.updateSkillStatus = async (req, res) => {
   const { skillId } = req.params;
   const { status } = req.body;
   const userId = req.user.id;
+  console.log("hitting this");
+  console.log("skillId");
 
   // Validate the new status
   if (![1, 2, 3].includes(status)) {
@@ -298,22 +300,44 @@ exports.updateSkillStatus = async (req, res) => {
   }
 
   try {
-    // Update the skill status in the database
-    const result = await db.query(
-      `UPDATE user_skills 
-       SET status = ? 
-       WHERE skill_id = ? AND user_id = ?`,
-      [status, skillId, userId]
+    // Check if the skill exists for the user
+    const existingSkills = await db.query(
+      `SELECT * FROM user_skills WHERE skill_id = ? AND user_id = ?`,
+      [skillId, userId]
     );
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Skill not found or not associated with the user' });
-    }
+    // Check if the query returned a valid result
+    if (existingSkills && existingSkills.length > 0) {
+      // Skill exists, update the status
+      const result = await db.query(
+        `UPDATE user_skills 
+         SET status = ? 
+         WHERE skill_id = ? AND user_id = ?`,
+        [status, skillId, userId]
+      );
 
-    res.status(200).json({ message: 'Skill status updated successfully' });
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Failed to update skill status.' });
+      }
+
+      res.status(200).json({ message: 'Skill status updated successfully' });
+    } else {
+      // Skill doesn't exist, insert a new record
+      const result = await db.query(
+        `INSERT INTO user_skills (user_id, skill_id, status, acquired_at) 
+         VALUES (?, ?, ?, NOW())`,
+        [userId, skillId, status]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(500).json({ message: 'Failed to create the skill entry.' });
+      }
+
+      res.status(201).json({ message: 'Skill created and status set successfully' });
+    }
   } catch (error) {
-    console.error('Error updating skill status:', error);
-    res.status(500).json({ message: 'An error occurred while updating the skill status.' });
+    console.error('Error updating or creating skill status:', error);
+    res.status(500).json({ message: 'An error occurred while updating or creating the skill status.' });
   }
 };
 
