@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { toast } from "@/components/ui/use-toast";
 import { skillsData } from '@/components/shared/skillsData';
+import { useSkillContext } from '@/components/shared/SkillContext';
 
 
 const findSkillById = (skillsData, skillId) => {
@@ -31,6 +32,17 @@ const findSkillById = (skillsData, skillId) => {
   return null; // Return null if no skill is found with the given ID
 };
 
+const groupSkillsByParent = (skills, skillsData) => {
+  const groupedSkills = {};
+  for (const parent in skillsData) {
+    groupedSkills[parent] = skillsData[parent].nodes.filter(skill =>
+      skills.includes(skill.id)
+    );
+  }
+  return groupedSkills;
+};
+
+
 // Dynamically create the FormSchema based on completed skills
 const createFormSchema = (completedSkills, skillsData) => {
   const skillsSchema = {};
@@ -42,6 +54,9 @@ const createFormSchema = (completedSkills, skillsData) => {
       console.error(`Skill not found: ${skillId}`); // Or handle this case appropriately
       return;
     }
+  
+  const groupedSkills = groupSkillsByParent(completedSkills, skillsData);
+
     
     skillsSchema[skillId] = z.object({
       selected: z.boolean().default(false),
@@ -62,7 +77,22 @@ const createFormSchema = (completedSkills, skillsData) => {
 };
 
 function NewContest() {
-  const { completedSkills, loading, error } = useCompletedSkills();
+  const { skills, loading, error } = useSkillContext();
+
+  const determineColumns = (total) => {
+    if (total <= 4) return 2; // If 4 or fewer, display 2 per row
+    if (total <= 9) return 3; // Up to 9 checkboxes, 3 per row
+    if (total <= 16) return 4; // Up to 16 checkboxes, 4 per row
+    return 5; // More than 16, display 5 per row
+  };
+
+  // Filter completed skills (status === 1)
+  const completedSkills = skills
+    .filter(skill => skill.status === 2)
+    .map(skill => skill.skill_id);
+  
+  
+  const columns = determineColumns(completedSkills);
 
   const FormSchema = createFormSchema(completedSkills, skillsData);
 
@@ -157,7 +187,12 @@ function NewContest() {
                       Choose up to 3 skills
                     </FormDescription>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div
+                  className="grid gap-3"
+                  style={{
+                    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                  }}
+                >
                     {completedSkills.map((skillId) => (
                       <FormField
                         key={skillId}

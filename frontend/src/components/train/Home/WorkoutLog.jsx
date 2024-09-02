@@ -47,8 +47,6 @@ export default function WorkoutLog() {
     try {
         // Check if a log for today exists
         const checkResponse = await api.get('train/logs/today');
-        console.log("WAAA");
-        console.log(checkResponse);
         if (checkResponse.data && checkResponse.data.log) {
             // Update the existing log
             const response = await api.put('train/logs', {
