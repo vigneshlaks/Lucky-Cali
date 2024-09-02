@@ -32,16 +32,6 @@ const findSkillById = (skillsData, skillId) => {
   return null; // Return null if no skill is found with the given ID
 };
 
-const groupSkillsByParent = (skills, skillsData) => {
-  const groupedSkills = {};
-  for (const parent in skillsData) {
-    groupedSkills[parent] = skillsData[parent].nodes.filter(skill =>
-      skills.includes(skill.id)
-    );
-  }
-  return groupedSkills;
-};
-
 
 // Dynamically create the FormSchema based on completed skills
 const createFormSchema = (completedSkills, skillsData) => {
@@ -51,11 +41,9 @@ const createFormSchema = (completedSkills, skillsData) => {
   completedSkills.forEach(skillId => {
     const skill = findSkillById(skillsData, skillId);
     if (!skill) {
-      console.error(`Skill not found: ${skillId}`); // Or handle this case appropriately
+      console.error(`Skill not found: ${skillId}`);
       return;
     }
-  
-  const groupedSkills = groupSkillsByParent(completedSkills, skillsData);
 
     
     skillsSchema[skillId] = z.object({
@@ -80,10 +68,10 @@ function NewContest() {
   const { skills, loading, error } = useSkillContext();
 
   const determineColumns = (total) => {
-    if (total <= 4) return 2; // If 4 or fewer, display 2 per row
-    if (total <= 9) return 3; // Up to 9 checkboxes, 3 per row
-    if (total <= 16) return 4; // Up to 16 checkboxes, 4 per row
-    return 5; // More than 16, display 5 per row
+    if (total <= 4) return 2; 
+    if (total <= 9) return 3; 
+    if (total <= 16) return 4;
+    return 5;
   };
 
   // Filter completed skills (status === 1)

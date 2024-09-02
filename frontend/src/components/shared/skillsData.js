@@ -1,10 +1,3 @@
-const ROOT_X = 800;
-const ROOT_Y = 100;
-const LEVEL_2_Y = 300;
-const LEVEL_3_Y = 400;
-const LEVEL_4_Y = 500;
-const X_SPACING = 150;
-
 export const skillsData = {
   handstands: {
     nodes: [
@@ -24,8 +17,6 @@ export const skillsData = {
       {
         id: 'one-arm-hs',
         label: 'One-arm Handstand',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 5, pull: 0, push: 4, legs: 3, conditioning: 3 },
         type: 'static'
@@ -41,8 +32,6 @@ export const skillsData = {
       {
         id: 'floor-pu',
         label: 'Floor Pushup',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 0, push: 2, legs: 1, conditioning: 1 },
         type: 'dynamic'
@@ -50,8 +39,6 @@ export const skillsData = {
       {
         id: 'diamond-pu',
         label: 'Diamond Pushup',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 0, push: 3, legs: 1, conditioning: 1 },
         type: 'dynamic'
@@ -59,8 +46,6 @@ export const skillsData = {
       {
         id: 'one-arm-pu',
         label: 'One-arm Pushup',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 0, push: 4, legs: 2, conditioning: 2 },
         type: 'dynamic'
@@ -68,8 +53,6 @@ export const skillsData = {
       {
         id: 'planche-pu',
         label: 'Planche Pushup',
-        x: ROOT_X,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 4, pull: 0, push: 5, legs: 2, conditioning: 3 },
         type: 'dynamic'
@@ -86,8 +69,6 @@ export const skillsData = {
       {
         id: 'negative-pullup',
         label: 'Negative Pullup',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 2, push: 0, legs: 1, conditioning: 1 },
         type: 'dynamic'
@@ -95,8 +76,6 @@ export const skillsData = {
       {
         id: 'pullup',
         label: 'Pullup',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 3, push: 0, legs: 1, conditioning: 2 },
         type: 'dynamic'
@@ -104,8 +83,6 @@ export const skillsData = {
       {
         id: 'l-pullup',
         label: 'L-Pullup',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 4, push: 0, legs: 2, conditioning: 3 },
         type: 'dynamic'
@@ -113,8 +90,6 @@ export const skillsData = {
       {
         id: 'oac',
         label: 'One Arm Chin (OAC)',
-        x: ROOT_X,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 4, pull: 5, push: 0, legs: 3, conditioning: 4 },
         type: 'dynamic'
@@ -131,8 +106,6 @@ export const skillsData = {
       {
         id: 'pb-dip',
         label: 'Parallel Bar Dip',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 0, push: 2, legs: 1, conditioning: 1 },
         type: 'dynamic'
@@ -140,8 +113,6 @@ export const skillsData = {
       {
         id: 'ring-dip',
         label: 'Ring Dip',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 0, push: 3, legs: 1, conditioning: 1 },
         type: 'dynamic'
@@ -149,8 +120,6 @@ export const skillsData = {
       {
         id: 'l-dip',
         label: 'L-Dip',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 0, push: 4, legs: 2, conditioning: 2 },
         type: 'dynamic'
@@ -158,8 +127,6 @@ export const skillsData = {
       {
         id: 'russian-dip',
         label: 'Russian Dip',
-        x: ROOT_X,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 4, pull: 0, push: 5, legs: 2, conditioning: 3 },
         type: 'dynamic'
@@ -176,8 +143,6 @@ export const skillsData = {
       {
         id: 'tuck-fl',
         label: 'Tuck Front Lever',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 2, pull: 2, push: 0, legs: 1, conditioning: 1 },
         type: 'static'
@@ -185,8 +150,6 @@ export const skillsData = {
       {
         id: 'adv-tuck-fl',
         label: 'Advanced Tuck Front Lever',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 3, pull: 3, push: 0, legs: 1, conditioning: 2 },
         type: 'static'
@@ -194,8 +157,6 @@ export const skillsData = {
       {
         id: 'straddle-fl',
         label: 'Straddle Front Lever',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 4, pull: 4, push: 0, legs: 2, conditioning: 3 },
         type: 'static'
@@ -203,8 +164,6 @@ export const skillsData = {
       {
         id: 'full-fl',
         label: 'Full Front Lever',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 5, pull: 5, push: 0, legs: 3, conditioning: 4 },
         type: 'static'
@@ -221,8 +180,6 @@ export const skillsData = {
       {
         id: 'bodyweight-row',
         label: 'Bodyweight Row',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 2, push: 0, legs: 1, conditioning: 1 },
         type: 'dynamic',
@@ -230,8 +187,6 @@ export const skillsData = {
       {
         id: 'tucked-row',
         label: 'Tucked Row',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 3, push: 0, legs: 1, conditioning: 2 },
         type: 'dynamic',
@@ -239,8 +194,6 @@ export const skillsData = {
       {
         id: 'adv-tucked-row',
         label: 'Advanced Tucked Row',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 4, push: 0, legs: 2, conditioning: 3 },
         type: 'dynamic',
@@ -248,8 +201,6 @@ export const skillsData = {
       {
         id: 'one-arm-row',
         label: 'One-arm Row',
-        x: ROOT_X,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 4, pull: 5, push: 0, legs: 3, conditioning: 4 },
         type: 'dynamic',
@@ -267,8 +218,6 @@ export const skillsData = {
       {
         id: 'bodyweight-squat',
         label: 'Bodyweight Squat',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 0, push: 1, legs: 2, conditioning: 1 },
         type: 'dynamic',
@@ -276,8 +225,6 @@ export const skillsData = {
       {
         id: 'pistol-squat',
         label: 'Pistol Squat',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 0, push: 1, legs: 3, conditioning: 2 },
         type: 'dynamic',
@@ -285,8 +232,6 @@ export const skillsData = {
       {
         id: 'shrimp-squat',
         label: 'Shrimp Squat',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 0, push: 1, legs: 4, conditioning: 3 },
         type: 'dynamic',
@@ -303,8 +248,6 @@ export const skillsData = {
       {
         id: 'lunge',
         label: 'Lunge',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 1, pull: 0, push: 1, legs: 2, conditioning: 1 },
         type: 'dynamic',
@@ -312,8 +255,6 @@ export const skillsData = {
       {
         id: 'jump-lunge',
         label: 'Jump Lunge',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 2, pull: 0, push: 1, legs: 3, conditioning: 2 },
         type: 'dynamic',
@@ -321,8 +262,6 @@ export const skillsData = {
       {
         id: 'split-squat',
         label: 'Split Squat',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 3, pull: 0, push: 1, legs: 4, conditioning: 3 },
         type: 'dynamic',
@@ -339,8 +278,6 @@ export const skillsData = {
       {
         id: 'false-grip-mu',
         label: 'False Grip Muscle Up',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 2, pull: 3, push: 2, legs: 1, conditioning: 2 },
         type: 'dynamic',
@@ -348,8 +285,6 @@ export const skillsData = {
       {
         id: 'kipping-mu',
         label: 'Kipping Muscle Up',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 3, pull: 4, push: 3, legs: 1, conditioning: 3 },
         type: 'dynamic',
@@ -357,8 +292,6 @@ export const skillsData = {
       {
         id: 'strict-mu',
         label: 'Strict Muscle Up',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 4, pull: 5, push: 4, legs: 2, conditioning: 4 },
         type: 'dynamic',
@@ -375,8 +308,6 @@ export const skillsData = {
       {
         id: 'wall-hspu',
         label: 'Wall Handstand Pushup',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 2, pull: 0, push: 3, legs: 1, conditioning: 1 },
         type: 'static',
@@ -384,8 +315,6 @@ export const skillsData = {
       {
         id: 'free-hspu',
         label: 'Free Handstand Pushup',
-        x: ROOT_X,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 3, pull: 0, push: 4, legs: 1, conditioning: 2 },
         type: 'static',
@@ -393,8 +322,6 @@ export const skillsData = {
       {
         id: 'pike-hspu',
         label: 'Pike Handstand Pushup',
-        x: ROOT_X,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 4, pull: 0, push: 5, legs: 2, conditioning: 3 },
         type: 'static',
@@ -411,8 +338,6 @@ export const skillsData = {
       {
         id: 'tuck-planche',
         label: 'Tuck Planche',
-        x: ROOT_X,
-        y: ROOT_Y,
         level: 1,
         scores: { balance: 2, pull: 0, push: 3, legs: 1, conditioning: 2 },
         type: 'static',
@@ -420,8 +345,6 @@ export const skillsData = {
       {
         id: 'adv-tuck-planche',
         label: 'Advanced Tuck Planche',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_2_Y,
         level: 2,
         scores: { balance: 3, pull: 0, push: 4, legs: 1, conditioning: 3 },
         type: 'static',
@@ -429,8 +352,6 @@ export const skillsData = {
       {
         id: 'straddle-planche',
         label: 'Straddle Planche',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_3_Y,
         level: 3,
         scores: { balance: 4, pull: 0, push: 5, legs: 2, conditioning: 4 },
         type: 'static',
@@ -438,8 +359,6 @@ export const skillsData = {
       {
         id: 'full-planche',
         label: 'Full Planche',
-        x: ROOT_X - X_SPACING,
-        y: LEVEL_4_Y,
         level: 4,
         scores: { balance: 5, pull: 0, push: 6, legs: 3, conditioning: 5 },
         type: 'static',

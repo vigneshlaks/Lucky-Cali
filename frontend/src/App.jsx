@@ -14,7 +14,6 @@ import PostsPage from './pages/PostsPage';
 import WorkoutLogPage from './pages/WorkoutLogPage';
 import ContestPage from './components/compete/pages/Homepage';
 import TrainHomePage from './components/train/Pages/HomePage';
-import Custompage from './components/compete/pages/CustomPage';
 import CalisthenicsProfile from './pages/ProfilePage';
 import { useAuth } from './components/shared/auth/AuthProvider';
 import ProtectedRoute from './components/shared/auth/ProtectedRoute';
@@ -204,7 +203,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ContestPage /> },
       { path: 'contest', element: <ContestPage /> },
-      { path: 'custom', element: <Custompage /> },
       { path: 'leaderboard', element: <LeadboardPage />}
     ],
   },

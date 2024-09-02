@@ -1,4 +1,3 @@
-// src/controllers/trainController.js
 const db = require('../config/db');
 
 // Fetch all posts
@@ -23,25 +22,66 @@ exports.getPosts = async (req, res) => {
     }
   };
 
-  exports.getLogById = async (req, res) => {
-    try {
-      const logId = req.params.id;
-      
-      // Query to get the log by ID
-      const logs = await db.query('SELECT * FROM logs WHERE id = ?', [logId]);
-  
-      // If no log is found, return a 404 error
-      if (logs.length === 0) {
-        return res.status(404).json({ message: 'Log not found' });
-      }
-  
-      // Respond with the log data
-      res.json(logs[0]);
-    } catch (error) {
-      console.error('Error fetching log by ID:', error);
-      res.status(500).json({ message: 'An error occurred while fetching the log.' });
+exports.getLogById = async (req, res) => {
+  try {
+    const logId = req.params.id;
+    
+    // Query to get the log by ID
+    const logs = await db.query('SELECT * FROM logs WHERE id = ?', [logId]);
+
+    // If no log is found, return a 404 error
+    if (logs.length === 0) {
+      return res.status(404).json({ message: 'Log not found' });
     }
-  };
+
+    // Respond with the log data
+    res.json(logs[0]);
+  } catch (error) {
+    console.error('Error fetching log by ID:', error);
+    res.status(500).json({ message: 'An error occurred while fetching the log.' });
+  }
+};
+
+exports.getPaginatedPosts = async (req, res) => {
+  try {
+    // Get page and limit from query parameters, with defaults if not provided
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const offset = (page - 1) * limit;
+
+    // Query to get the total number of posts
+    const totalPostsResult = await db.query('SELECT COUNT(*) AS total FROM posts');
+
+    // Convert BigInt to Number
+    const totalPosts = Number(totalPostsResult[0].total);
+
+    // Query to fetch paginated posts
+    var posts = await db.query(
+      'SELECT * FROM posts ORDER BY published_at DESC LIMIT ? OFFSET ?',
+      [limit, offset]
+    );
+    
+    // Calculate total pages
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    // Parse the id of each post to a number
+    posts = posts.map(post => ({
+      ...post,
+      id: Number(post.id)
+    }));
+
+    // Send paginated posts along with pagination info
+    res.json({
+      posts,
+      totalPages,
+      currentPage: page,
+      totalPosts,
+    });
+  } catch (error) {
+    console.error('Error fetching paginated posts:', error);
+    res.status(500).json({ message: 'Failed to fetch posts' });
+  }
+};
 
   exports.getPostById = async (req, res) => {
     try {
@@ -76,6 +116,48 @@ exports.getPosts = async (req, res) => {
       res.status(500).json({ message: 'An error occurred while fetching post data.' });
     }
   };
+
+  exports.getPaginatedLogs = async (req, res) => {
+    try {
+      // Get page and limit from query parameters, with defaults if not provided
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 6;
+      const offset = (page - 1) * limit;
+  
+      // Query to get the total number of logs
+      const totalLogsResult = await db.query('SELECT COUNT(*) AS total FROM logs');
+  
+      // Convert BigInt to Number
+      const totalLogs = Number(totalLogsResult[0].total);
+  
+      // Query to fetch paginated logs
+      let logs = await db.query(
+        'SELECT * FROM logs ORDER BY date DESC LIMIT ? OFFSET ?',
+        [limit, offset]
+      );
+  
+      // Calculate total pages
+      const totalPages = Math.ceil(totalLogs / limit);
+  
+      // Parse the id of each log to a number
+      logs = logs.map(log => ({
+        ...log,
+        id: Number(log.id),
+      }));
+  
+      // Send paginated logs along with pagination info
+      res.json({
+        logs,
+        totalPages,
+        currentPage: page,
+        totalLogs,
+      });
+    } catch (error) {
+      console.error('Error fetching paginated logs:', error);
+      res.status(500).json({ message: 'Failed to fetch workout logs' });
+    }
+  };
+
   
 
   exports.getAllUserLogs = async (req, res) => {

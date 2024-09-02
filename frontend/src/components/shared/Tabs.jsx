@@ -8,7 +8,6 @@ export const trainMiddleTabs = [
 export const competeMiddleTabs = [
   { id: "contest", label: "Contest", path: "/compete/contest" },
   { id: "leaderboard", label: "Leaderboard", path: "/compete/leaderboard" }, 
-  { id: "custom", label: "Custom", path: "/compete/custom" },
   ];
 
 export const trainDefaultEndTabs = [
