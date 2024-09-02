@@ -202,6 +202,53 @@ exports.getWorkoutLog = async (req, res) => {
   }
 };
 
+
+exports.updateSkillStatus = async (req, res) => {
+  const { skillId } = req.params;
+  const { status, user_id, acquired_at } = req.body; // Include additional fields if needed
+
+  try {
+    // Validate input
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
+
+    // Check if the skill exists in the database
+    const [existingSkill] = await db.query(
+      'SELECT * FROM user_skills WHERE skill_id = ? AND user_id = ?',
+      [skillId, user_id]
+    );
+
+    if (existingSkill.length > 0) {
+      // If the skill exists, update its status
+      const [updateResult] = await db.query(
+        'UPDATE user_skills SET status = ? WHERE skill_id = ? AND user_id = ?',
+        [status, skillId, user_id]
+      );
+
+      // Check if any rows were affected
+      if (updateResult.affectedRows === 0) {
+        return res.status(404).json({ message: 'Skill not found' });
+      }
+
+      // Respond with a success message
+      return res.status(200).json({ message: 'Skill status updated successfully' });
+    } else {
+      // If the skill does not exist, insert a new skill entry
+      const [insertResult] = await db.query(
+        'INSERT INTO user_skills (user_id, skill_id, status, acquired_at) VALUES (?, ?, ?, ?)',
+        [user_id, skillId, status, acquired_at || new Date()]
+      );
+
+      // Respond with a success message
+      return res.status(201).json({ message: 'Skill created successfully', skillId: insertResult.insertId });
+    }
+  } catch (error) {
+    console.error('Error updating or creating skill status:', error);
+    res.status(500).json({ message: 'Failed to update or create skill status' });
+  }
+};
+
 exports.rerollChallenges = async (req, res) => {
   try {
     const userId = req.user.id;
