@@ -11,8 +11,8 @@ const TrainHomePage = () => {
           <Challenges className="flex-grow" />
           <PlayerProfile className="flex-grow" />
         </div>
-        <div className="flex flex-col space-y-5">
-          <WorkoutLog className="flex-grow" />
+        <div>
+          <WorkoutLog />
         </div>
       </div>
     </div>

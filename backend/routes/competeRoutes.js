@@ -5,4 +5,6 @@ const authenticateJWT = require('../middleware/jwtAuth');
 
 router.get('/leaderboard', authenticateJWT, competeController.getLeaderboard);
 
+router.get('/enter', authenticateJWT, competeController.enterCompetition);
+
 module.exports = router;

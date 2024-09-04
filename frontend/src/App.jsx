@@ -147,13 +147,15 @@ const LayoutWithNavbar = () => {
   const currentLayout = getCurrentLayout();
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Navbar 
-        className="dark" 
+        className="dark"
         middleTabs={currentLayout.middleTabs} 
         endTabs={currentLayout.getEndTabs(isAuthenticated)} 
       />
-      <AnimatedOutlet className="dark" tabs={currentLayout.middleTabs} />
+      <div className="flex-1 overflow-auto">
+        <AnimatedOutlet className="dark h-full" tabs={currentLayout.middleTabs} />
+      </div>
     </div>
   );
 };

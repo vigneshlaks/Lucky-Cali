@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Card,
   CardContent,
@@ -14,10 +12,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
-import { toast } from "@/components/ui/use-toast";
+import { Toaster, toast } from 'sonner';
 import { skillsData } from '@/components/shared/skillsData';
 import { useSkillContext } from '@/components/shared/SkillContext';
-
+import api from '@/components/shared/api';
 
 const findSkillById = (skillsData, skillId) => {
   // Loop through each category of skills
@@ -30,38 +28,6 @@ const findSkillById = (skillsData, skillId) => {
     }
   }
   return null; // Return null if no skill is found with the given ID
-};
-
-
-// Dynamically create the FormSchema based on completed skills
-const createFormSchema = (completedSkills, skillsData) => {
-  const skillsSchema = {};
-  const goalsSchema = {};
-
-  completedSkills.forEach(skillId => {
-    const skill = findSkillById(skillsData, skillId);
-    if (!skill) {
-      console.error(`Skill not found: ${skillId}`);
-      return;
-    }
-
-    
-    skillsSchema[skillId] = z.object({
-      selected: z.boolean().default(false),
-      label: z.string().default(skill.label),
-      type: z.string().default(skill.type)
-    });
-  
-    goalsSchema[skillId] = skill.type === 'dynamic'
-      ? z.number().min(1).optional()
-      : z.number().min(1).optional();
-  });
-
-  return z.object({
-    duration: z.enum(['2 Week', '4 Week']),
-    skills: z.object(skillsSchema),
-    goals: z.object(goalsSchema) // Top-level dynamic goals schema based on skill types
-  });
 };
 
 function NewContest() {
@@ -79,13 +45,9 @@ function NewContest() {
     .filter(skill => skill.status === 2)
     .map(skill => skill.skill_id);
   
-  
   const columns = determineColumns(completedSkills);
 
-  const FormSchema = createFormSchema(completedSkills, skillsData);
-
   const form = useForm({
-    resolver: zodResolver(FormSchema),
     defaultValues: {
       duration: '2 Week',
       skills: completedSkills.reduce((acc, skillId) => {
@@ -113,15 +75,15 @@ function NewContest() {
     },
   });
 
-  const onSubmit = (data) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const onSubmit = async (data) => {
+    try {
+      const response = await api.post('/competition/enter', data);
+      toast.success('Entered Competition');
+      console.log('Competition entry successful:', response.data);
+    } catch (error) {
+      console.error('Error entering competition:', error.response?.data || error.message);
+      toast.error('Failed to enter competition');
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -129,41 +91,42 @@ function NewContest() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} >
+      <Toaster />
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="bg-black text-white border border-white">
           <CardHeader>
             <CardTitle className="text-white">Enter Contest</CardTitle>
             <p className="text-gray-400">Climb the leaderboard while receiving feedback</p>
           </CardHeader>
           <CardContent>
-          <FormField
-            className="flex flex-row"
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem className="space-y-6">
-                <FormLabel className="text-base text-white">Duration</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-row justify-center items-center space-x-4"
-                  >
-                    {['2 Week', '4 Week'].map((option) => (
-                      <FormItem key={option} className="flex items-center space-x-3">
-                        <FormControl>
-                          <RadioGroupItem value={option} className="text-white border-white" />
-                        </FormControl>
-                        <FormLabel className="font-normal text-white">{option}</FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-  
+            <FormField
+              className="flex flex-row"
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem className="space-y-6">
+                  <FormLabel className="text-base text-white">Duration</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-row justify-center items-center space-x-4"
+                    >
+                      {['2 Week', '4 Week'].map((option) => (
+                        <FormItem key={option} className="flex items-center space-x-3">
+                          <FormControl>
+                            <RadioGroupItem value={option} className="text-white border-white" />
+                          </FormControl>
+                          <FormLabel className="font-normal text-white">{option}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="skills"
@@ -176,11 +139,11 @@ function NewContest() {
                     </FormDescription>
                   </div>
                   <div
-                  className="grid gap-3"
-                  style={{
-                    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-                  }}
-                >
+                    className="grid gap-3"
+                    style={{
+                      gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                    }}
+                  >
                     {completedSkills.map((skillId) => (
                       <FormField
                         key={skillId}
@@ -212,7 +175,7 @@ function NewContest() {
                                 {skill?.label || skillId}
                               </FormLabel>
                             </FormItem>
-                          )
+                          );
                         }}
                       />
                     ))}
@@ -221,7 +184,7 @@ function NewContest() {
                 </FormItem>
               )}
             />
-  
+
             <FormField
               control={form.control}
               name="goals"

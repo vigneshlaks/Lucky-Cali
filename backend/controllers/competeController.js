@@ -29,47 +29,37 @@ competeController.getLeaderboard = async (req, res) => {
   }
 };
 
-competeController.submitScore = async (req, res) => {
-  const { score } = req.body;
+competeController.enterCompetition = async (req, res) => {
+  console.log("got here");
   const userId = req.user.id;
-
-  if (typeof score !== 'number') {
-    return res.status(400).json({ message: 'Invalid input data' });
-  }
+  const { competitionId, otherData } = req.body; // Assuming these values are sent in the request body
 
   try {
-    await db.query('BEGIN');
-
-    // Check if the user already has a score in the leaderboard
-    const existingScore = await db.query(
-      'SELECT * FROM leaderboard WHERE user_id = $1',
-      [userId]
+    // Check if the user is already entered in the competition
+    const [existingEntries] = await db.query(
+      'SELECT * FROM competition_entries WHERE user_id = ? AND competition_id = ?',
+      [userId, competitionId]
     );
 
-    if (existingScore.rows.length > 0) {
-      // Update the existing score
-      await db.query(
-        'UPDATE leaderboard SET score = $1 WHERE user_id = $2',
-        [score, userId]
-      );
-    } else {
-      // Insert a new score entry for the user
-      await db.query(
-        'INSERT INTO leaderboard (user_id, score) VALUES ($1, $2)',
-        [userId, score]
-      );
+    // Check if there is an existing entry
+    if (existingEntries.length > 0) {
+      return res.status(400).json({ message: 'User is already entered in this competition.' });
     }
 
-    await db.query('COMMIT');
-    res.json({ message: 'Score submitted successfully.' });
+    // Insert the entry into the database
+    const [result] = await db.query(
+      'INSERT INTO competition_entries (user_id, competition_id, entry_data) VALUES (?, ?, ?)',
+      [userId, competitionId, JSON.stringify(otherData)]
+    );
+
+    // Respond with success
+    res.status(201).json({ message: 'Successfully entered competition.', entryId: result.insertId });
   } catch (error) {
-    await db.query('ROLLBACK');
-    console.error('Error submitting score:', error);
-    res.status(500).json({ message: 'An error occurred while submitting the score.' });
+    console.error('Error entering competition:', error);
+    res.status(500).json({ message: 'Failed to enter competition.' });
   }
 };
 
-module.exports = competeController;
 
 
 module.exports = competeController;
