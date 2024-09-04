@@ -9,7 +9,7 @@ const generateAccessToken = (user) => {
     },
     jwtConfig.accessTokenSecret,
     {
-      expiresIn: '15m',
+      expiresIn: '1d',
       issuer: jwtConfig.issuer,
       audience: jwtConfig.audience
     }

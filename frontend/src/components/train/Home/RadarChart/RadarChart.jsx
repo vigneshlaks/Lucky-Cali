@@ -116,9 +116,7 @@ const RadarChart = () => {
     return <div>No data available</div>;
   }
   return (
-    <div className="w-full h-full">
       <Radar data={chartData} options={radarChartOptions} />
-    </div>
   );
 };
 

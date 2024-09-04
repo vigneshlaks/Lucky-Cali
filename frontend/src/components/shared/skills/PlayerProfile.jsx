@@ -42,25 +42,26 @@ const PlayerProfile = () => {
       <CardContent className="px-6 py-4">
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col items-center">
-            <div className="text-md font-medium">Unlocked Skills</div>
+            <div className="text-sm font-medium">Unlocked Skills</div>
             <div className="text-2xl">{unlockedSkills}</div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-md font-medium">Current Skills</div>
+            <div className="text-sm font-medium">Current Skills</div>
             <div className="text-2xl">{currentSkills}</div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-md font-medium">Locked Skills</div>
+            <div className="text-sm font-medium">Locked Skills</div>
             <div className="text-2xl">{lockedSkills}</div>
           </div>
         </div>
       </CardContent>
-      <CardContent className="px-6 py-4">
-        <div className="flex justify-center">
+      <CardContent className="">
+        <div className="flex justify-center items-center">
           <RadarChart completedSkills={unlockedSkillIds} />
         </div>
       </CardContent>
     </Card>
+
   );
 };
 

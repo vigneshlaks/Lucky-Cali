@@ -98,7 +98,7 @@ const Challenges = () => {
       <Separator className="bg-gray-800" />
       <CardContent className="pt-6 pb-8 px-6">
         {error ? (
-          <div className="text-red-400 text-center py-4">Error: {error.message}</div>
+          <div className="text-red-400 text-center py-4">Session Expired Please Refresh</div>
         ) : loading ? (
           <div className="flex justify-center items-center">
             <div className="animate-spin rounded-full h-5 w-8 border-t-2 border-b-2 border-white"></div>

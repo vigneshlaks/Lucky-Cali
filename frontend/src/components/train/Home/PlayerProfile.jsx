@@ -1,5 +1,5 @@
 import RadarChart from "./RadarChart/RadarChart";
-import gojoPNG from "../../../assets/gojo.png";
+import gojoPNG from "../../../assets/gojo.jpg";
 
 const PlayerProfile = () => {
   const experience = {
@@ -15,7 +15,7 @@ const PlayerProfile = () => {
         <h2 className="text-2xl font-bold">Player Profile</h2>
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
-            <div className="text-white text-lg font-medium">Experience:</div>
+            <div className="text-lg font-medium">Experience:</div>
             <div className="flex items-center">
               <div className="text-white text-lg">{experience.level}</div>
             </div>
@@ -27,9 +27,9 @@ const PlayerProfile = () => {
         </div>
       </div>
       <div className="flex-grow flex p-0">
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex items-center justify-center p-11">
           <div className="text-center">
-            <img src={gojoPNG} alt="Gojo" className="rounded-lg max-w-full h-auto" style={{maxHeight: '210px'}} />
+            <img src={gojoPNG} alt="Gojo" className="" />
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center p-4">

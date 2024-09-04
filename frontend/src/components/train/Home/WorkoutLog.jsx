@@ -42,7 +42,7 @@ export default function WorkoutLog() {
   };
 
   const handleSubmit = async () => {
-    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
 
     try {
         // Check if a log for today exists
