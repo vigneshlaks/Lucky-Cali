@@ -1,5 +1,5 @@
-import CardWrapper from "./CardWrapper"
-
+import React from 'react';
+import CardWrapper from "./CardWrapper";
 import {
   Form,
   FormControl,
@@ -8,7 +8,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
 import api from "../api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from '@/components/ui/button';
@@ -16,9 +15,10 @@ import { Input } from '@/components/ui/input';
 import { LoginSchema } from "../../../../schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useAuth } from "./AuthProvider";
 
 const LoginCard = () => {
+  const { setToken } = useAuth(); // Access setToken from AuthProvider context
   const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -35,11 +35,17 @@ const LoginCard = () => {
   const onSubmit = async (data) => {
     try {
       const response = await api.post('/user/login', data);
+
+      // Assuming response contains an accessToken
+      if (response?.data?.accessToken) {
+        setToken(response.data.accessToken); // Properly set the token
+      }
+
+      // Redirect user after successful login
       const from = location.state?.from?.pathname || '/train/';
-      console.log(from)
       navigate(from, { replace: true });
-    } catch {
-      console.log("Error sending information");
+    } catch (error) {
+      console.error("Error sending information:", error);
     }
   };
 
@@ -48,7 +54,7 @@ const LoginCard = () => {
       label="Login to your account"
       title="Login"
       backButtonHref="/auth/register"
-      backButtonLabel= "Don't have an account? Register here."
+      backButtonLabel="Don't have an account? Register here."
       content={
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
@@ -81,7 +87,9 @@ const LoginCard = () => {
               />
             </div>
             <FormItem className="flex justify-center">
-              <Button type="submit" variant= "ringHover" className="mt-4">Login</Button>
+              <Button type="submit" variant="ringHover" className="mt-4">
+                Login
+              </Button>
             </FormItem>
           </form>
         </Form>
@@ -89,6 +97,6 @@ const LoginCard = () => {
       className="bg-gray-800 text-white"
     />
   );
-}
+};
 
 export default LoginCard;

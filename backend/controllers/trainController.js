@@ -122,18 +122,20 @@ exports.getPaginatedPosts = async (req, res) => {
       // Get page and limit from query parameters, with defaults if not provided
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 6;
+
+      const userId = req.user.id;
       const offset = (page - 1) * limit;
   
       // Query to get the total number of logs
-      const totalLogsResult = await db.query('SELECT COUNT(*) AS total FROM logs');
+      const totalLogsResult = await db.query('SELECT COUNT(*) AS total FROM logs WHERE user_id = ?', [userId]);
   
       // Convert BigInt to Number
       const totalLogs = Number(totalLogsResult[0].total);
   
       // Query to fetch paginated logs
       let logs = await db.query(
-        'SELECT * FROM logs ORDER BY date DESC LIMIT ? OFFSET ?',
-        [limit, offset]
+        'SELECT * FROM logs WHERE user_id = ? ORDER BY date DESC LIMIT ? OFFSET ?',
+        [userId, limit, offset]
       );
   
       // Calculate total pages
@@ -157,8 +159,6 @@ exports.getPaginatedPosts = async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch workout logs' });
     }
   };
-
-  
 
   exports.getAllUserLogs = async (req, res) => {
     try {

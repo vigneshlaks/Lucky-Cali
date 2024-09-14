@@ -1,12 +1,16 @@
 import React from 'react';
 import { skillsData } from "../skillsData";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import RadarChart from '@/components/train/Home/RadarChart/RadarChart';
+import { Button } from '@/components/ui/button';
+import RadarChart from '@/components/train/Home/RadarChart';
 import { useSkillContext } from '../SkillContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthProvider';
 
 const PlayerProfile = () => {
-  // Use the context to access skills, loading, and error states
+  const { logout } = useAuth();
   const { skills, loading, error } = useSkillContext();
+  const navigate = useNavigate(); // Hook to navigate the user to another page after logout
 
   // Handle loading and error states
   if (loading) return <p>Loading...</p>;
@@ -34,10 +38,23 @@ const PlayerProfile = () => {
     .filter(skill => skill.status === 1)
     .map(skill => skill.skill_id);
 
+  const handleSignOut = async () => {
+    logout();
+    navigate('/auth/login');
+  };
+
   return (
     <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden">
-      <CardHeader className="px-6 py-4 border-b border-gray-800">
-        <CardTitle>Player Profile</CardTitle>
+      <CardHeader className="flex flex-col items-start px-6 py-4 border-b border-gray-800 space-y-2 items-center text-center">
+        <CardTitle className="self-stretch">Player Profile</CardTitle>
+        <Button
+          variant="ringHoverRed"
+          className="font-normal"
+          size="sm"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </Button>
       </CardHeader>
       <CardContent className="px-6 py-4">
         <div className="grid grid-cols-3 gap-4">
@@ -55,13 +72,12 @@ const PlayerProfile = () => {
           </div>
         </div>
       </CardContent>
-      <CardContent className="">
+      <CardContent>
         <div className="flex justify-center items-center">
           <RadarChart completedSkills={unlockedSkillIds} />
         </div>
       </CardContent>
     </Card>
-
   );
 };
 

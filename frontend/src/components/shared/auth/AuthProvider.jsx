@@ -1,7 +1,5 @@
-/* eslint-disable react/prop-types */
-// src/contexts/AuthContext.js
-import { createContext, useContext, useEffect, useLayoutEffect, useState, useRef } from 'react';
-import api from '../api'; 
+import { createContext, useContext, useLayoutEffect, useState, useRef } from 'react';
+import api from '../api';
 
 const AuthContext = createContext(null);
 
@@ -18,7 +16,7 @@ export const AuthProvider = ({ children }) => {
           setToken(response.data.accessToken);
         } catch (error) {
           setToken(null);
-          console.error("Failed to fetch token: ", error);
+          console.error('Failed to fetch token: ', error);
         } finally {
           setLoading(false);
         }
@@ -33,12 +31,10 @@ export const AuthProvider = ({ children }) => {
     // Add token to header
     const authInterceptor = api.interceptors.request.use((config) => {
       if (token) {
-        config.headers.Authorization = `bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });
-
-    
 
     // If we have an invalid access token, attempt to get a new access token
     const refreshInterceptor = api.interceptors.response.use(
@@ -50,7 +46,7 @@ export const AuthProvider = ({ children }) => {
           try {
             const response = await api.get('/auth/refreshToken');
             setToken(response.data.accessToken);
-            originalRequest.headers.Authorization = `bearer ${response.data.accessToken}`;
+            originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
             return api(originalRequest);
           } catch (refreshError) {
             setToken(null);
@@ -67,12 +63,27 @@ export const AuthProvider = ({ children }) => {
     };
   }, [token]);
 
+
+  // Logout function to handle clearing the authentication state
+  const logout = async () => {
+    try {
+      // Call the logout endpoint to clear server-side cookies or tokens if applicable
+      await api.post('/user/logout');
+
+      // Clear the token state and any relevant data
+      setToken(null);
+
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   if (loading) {
-    return <div></div>
+    return <div>Loading...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ token, setToken, logout }}>
       {children}
     </AuthContext.Provider>
   );

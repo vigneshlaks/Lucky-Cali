@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
+import {useState, useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Card,
@@ -16,6 +17,7 @@ import { Toaster, toast } from 'sonner';
 import { skillsData } from '@/components/shared/skillsData';
 import { useSkillContext } from '@/components/shared/SkillContext';
 import api from '@/components/shared/api';
+import { useAuth } from '@/components/shared/auth/AuthProvider';
 
 const findSkillById = (skillsData, skillId) => {
   // Loop through each category of skills
@@ -32,6 +34,7 @@ const findSkillById = (skillsData, skillId) => {
 
 function NewContest() {
   const { skills, loading, error } = useSkillContext();
+  const { token } = useAuth();
 
   const determineColumns = (total) => {
     if (total <= 4) return 2; 
@@ -77,9 +80,14 @@ function NewContest() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.post('/competition/enter', data);
-      toast.success('Entered Competition');
-      console.log('Competition entry successful:', response.data);
+      if (token) {
+        const response = await api.post('/compete/enter', data);
+        toast.success('Entered Competition');
+        console.log('Competition entry successful:', response.data);
+      } else {
+        toast('Sign in to Enter a Competition');
+      }
+      
     } catch (error) {
       console.error('Error entering competition:', error.response?.data || error.message);
       toast.error('Failed to enter competition');
@@ -286,18 +294,65 @@ function InContest({ week, feedbackEntries }) {
 }
 
 export default function WorkoutPlanForm() {
+  const [userStatus, setUserStatus] = useState(null);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+  const { token } = useAuth(); 
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+      try {
+        if (token) {
+          const response = await api.get('/user/status');
+          setUserStatus(response.data);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching user status:', err);
+        setError('Failed to fetch user status');
+        setLoading(false);
+      }
+    };
+
+    fetchUserStatus();
+  }, []);
+
+  // Handle loading state
+  if (loading) return <div className="text-white">Loading...</div>;
+
+  // Handle error state
+  if (error) return <div className="text-red-500">{error}</div>;
+
+  // Parse feedback entries from userStatus
+  let feedbackEntries = [];
+  if (userStatus && userStatus.in_competition && userStatus.feedback) {
+    try {
+      feedbackEntries = JSON.parse(userStatus.feedback);
+    } catch (parseError) {
+      console.error('Error parsing feedback JSON:', parseError);
+      feedbackEntries = [];
+    }
+  }
+
+
+  console.log(userStatus);
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen space-y-8 bg-black p-4">
-      <NewContest />
-      <InContest
-        week={3}
-        feedbackEntries={[
-          "Great work! Keep improving your form. Focus on maintaining proper posture throughout the exercises.",
-          "Nice job on increasing the weight. Remember to focus on your breathing technique during lifts.",
-          "Your flexibility has improved. Keep up with your stretching routine for continued progress.",
-          "Excellent progress on your cardio endurance! Try incorporating interval training for further improvement."
-        ]}
-      />
+      {userStatus && userStatus.in_competition ? (
+        <InContest
+          week={3}
+          feedbackEntries={
+            feedbackEntries.length > 0
+              ? feedbackEntries.map((entry) => entry.comment) 
+              : []
+          }
+        />
+      ) : (
+        <NewContest />
+      )}
     </div>
   );
 }

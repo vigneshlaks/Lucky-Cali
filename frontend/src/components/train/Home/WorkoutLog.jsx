@@ -6,9 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../../ui/button";
 import api from '@/components/shared/api'; // Assuming your API configuration is here
 import { Toaster, toast } from 'sonner';
+import { useAuth } from '@/components/shared/auth/AuthProvider';
 
 export default function WorkoutLog() {
   const currentDate = new Date().toLocaleDateString();
+  const { token } = useAuth();
 
   const [formValues, setFormValues] = useState({
     title: `${currentDate} Workout Log`,
@@ -19,12 +21,14 @@ export default function WorkoutLog() {
   useEffect(() => {
     const fetchExistingLog = async () => {
       try {
-        const response = await api.get(`/train/logs/today`);
-        if (response.data.log) {
-          setFormValues({
-            title: response.data.log.title || `${currentDate} Workout Log`,
-            description: response.data.log.description || '',
-          });
+        if(token){
+          const response = await api.get(`/train/logs/today`);
+          if (response.data.log) {
+            setFormValues({
+              title: response.data.log.title || `${currentDate} Workout Log`,
+              description: response.data.log.description || '',
+            });
+          }
         }
       } catch (error) {
         console.error("Error fetching existing log:", error.response?.data || error.message);
@@ -45,32 +49,41 @@ export default function WorkoutLog() {
     const today = new Date().toISOString().split('T')[0];
 
     try {
-        // Check if a log for today exists
-        const checkResponse = await api.get('train/logs/today');
-        if (checkResponse.data && checkResponse.data.log) {
-            // Update the existing log
-            const response = await api.put('train/logs', {
-                title: formValues.title,
-                description: formValues.description,
-            });
-            toast.success('Log Updated!');
-            console.log('Workout log updated:', response.data);
-        } else {
-            // Create a new log
-            const response = await api.post('train/logs', {
-                title: formValues.title,
-                description: formValues.description,
-                date: today,
-            });
-            toast.success('Log Submitted!');
-            console.log('Workout log created:', response.data);
+        if (token){
+          // Check if a log for today exists
+          const checkResponse = await api.get('train/logs/today');
+          if (checkResponse.data && checkResponse.data.log) {
+              // Update the existing log
+              const response = await api.put('train/logs', {
+                  title: formValues.title,
+                  description: formValues.description,
+              });
+              toast.success('Log Updated!');
+              console.log('Workout log updated:', response.data);
+          } else {
+              // Create a new log
+              const response = await api.post('train/logs', {
+                  title: formValues.title,
+                  description: formValues.description,
+                  date: today,
+              });
+              toast.success('Log Submitted!');
+              console.log('Workout log created:', response.data);
+          }
+        } else{
+          toast('Sign in to Submit Logs');
         }
+      
 
-        setSubmitted(true);
+      setSubmitted(true);
     } catch (error) {
         console.error("Error submitting workout log:", error.response?.data || error.message);
     }
 };
+
+  const handleInsight = async () => {
+    toast('Feature Temporarily Down');
+  };
 
   return (
     <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden h-full flex flex-col">
@@ -112,6 +125,7 @@ export default function WorkoutLog() {
           <Button
             variant="default"
             className="bg-white text-black hover:bg-gray-200 transition-colors duration-200"
+            onClick={handleInsight}
           >
             Insight
           </Button>
