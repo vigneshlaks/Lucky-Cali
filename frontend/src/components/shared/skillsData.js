@@ -89,7 +89,7 @@ export const skillsData = {
       },
       {
         id: 'oac',
-        label: 'One Arm Chin (OAC)',
+        label: 'One Arm Chin Up',
         level: 4,
         scores: { balance: 4, pull: 5, push: 0, legs: 3, conditioning: 4 },
         type: 'dynamic'

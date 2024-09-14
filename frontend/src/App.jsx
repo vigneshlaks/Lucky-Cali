@@ -20,6 +20,7 @@ import ProtectedRoute from './components/shared/auth/ProtectedRoute';
 import LeadboardPage from './pages/LeadboardPage';
 import PostDetailsPage from './pages/PostDetailsPage';
 import LogDetailsPage from './pages/LogDetailsPage';
+import LandingPage from './pages/LandingPage';
 
 const pageVariants = {
   initialRight: {
@@ -131,7 +132,6 @@ const layoutConfig = {
     middleTabs: competeMiddleTabs,
     getEndTabs: (isAuthenticated) => isAuthenticated ? competeAuthEndTabs : competeDefaultEndTabs,
   },
-  // Add more layouts as needed
 };
 
 //Dynamically create navbar depending on login
@@ -147,14 +147,15 @@ const LayoutWithNavbar = () => {
   const currentLayout = getCurrentLayout();
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="">
       <Navbar 
         className="dark"
         middleTabs={currentLayout.middleTabs} 
         endTabs={currentLayout.getEndTabs(isAuthenticated)} 
+        
       />
       <div className="flex-1 overflow-auto">
-        <AnimatedOutlet className="dark h-full" tabs={currentLayout.middleTabs} />
+        <AnimatedOutlet className="" tabs={currentLayout.middleTabs} />
       </div>
     </div>
   );
@@ -185,6 +186,10 @@ const LayoutWithoutNavbar = () => (
 );
 
 const router = createBrowserRouter([
+  {
+    path:'',
+    element: <LandingPage />
+  },
   {
     path: '/train',
     element: <LayoutWithNavbar middleTabs={trainMiddleTabs} endTabs={trainDefaultEndTabs} />,

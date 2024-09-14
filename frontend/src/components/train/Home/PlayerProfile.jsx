@@ -1,5 +1,5 @@
-import RadarChart from "./RadarChart/RadarChart";
-import gojoPNG from "../../../assets/gojo.jpg";
+import RadarChart from "./RadarChart";
+import Killua from "../../../assets/killua.jpg";
 
 const PlayerProfile = () => {
   const experience = {
@@ -26,18 +26,16 @@ const PlayerProfile = () => {
           </div>
         </div>
       </div>
-      <div className="flex-grow flex p-0">
-        <div className="flex-1 flex items-center justify-center p-11">
-          <div className="text-center">
-            <img src={gojoPNG} alt="Gojo" className="" />
+      <div className="flex">
+        <div className="w-1/2 flex items-center justify-center">
+          <div className="p-8">
+            <img src={Killua} alt="Killua" className="h-1000" />
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full h-full max-w-[300px] max-h-[300px]">
-            <RadarChart />
-          </div>
-          </div>
+        <div className="w-1/2 flex items-center p-8 justify-center">
+          <RadarChart />
         </div>
+      </div>
     </div>
   );
 };

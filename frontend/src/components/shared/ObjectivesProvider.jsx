@@ -17,7 +17,7 @@ export const ObjectivesProvider = ({ children }) => {
 
         // Set goals
         setGoals(data.goals || []);
-
+        
         // Set challenges
         setChallenges(data.challenges || []);
 

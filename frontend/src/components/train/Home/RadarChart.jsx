@@ -11,6 +11,7 @@ import {
 import { Radar } from 'react-chartjs-2';
 import { skillsData } from '@/components/shared/skillsData';
 import { useSkillContext } from '@/components/shared/SkillContext';
+import { useAuth } from '@/components/shared/auth/AuthProvider';
 
 ChartJS.register(
   RadialLinearScale,
@@ -26,16 +27,12 @@ const calculateRadarChartData = (unlockedSkills) => {
   const totalScores = { balance: 0, push: 0, pull: 0, legs: 0, conditioning: 0 };
   let skillCount = 0;
 
-  // Check if unlockedSkills is an array of objects or a list of IDs
-  const skillIds = Array.isArray(unlockedSkills) && typeof unlockedSkills[0] === 'object' 
-    ? unlockedSkills
-        .filter(skill => skill.status === 1) // Filter skills with status 1
-        .map(skill => skill.skill_id)        // Map to get skill IDs
+  const skillIds = Array.isArray(unlockedSkills) && typeof unlockedSkills[0] === 'object'
+    ? unlockedSkills.filter(skill => skill.status === 1).map(skill => skill.skill_id)
     : unlockedSkills;
 
   Object.values(skillsData).forEach((category) => {
     category.nodes.forEach((skill) => {
-      // Check if the skill is unlocked by matching skill IDs
       if (skillIds.includes(skill.id)) {
         Object.entries(skill.scores).forEach(([key, value]) => {
           totalScores[key] += value;
@@ -46,7 +43,7 @@ const calculateRadarChartData = (unlockedSkills) => {
   });
 
   const normalizedScores = Object.values(totalScores).map((score) =>
-    skillCount > 0 ? Math.round((score / skillCount) * 2) : 0 // Multiply by 2 to scale to 0-10 range
+    skillCount > 0 ? Math.round((score / skillCount) * 2) : 0 // Scale to 0-10
   );
 
   return {
@@ -62,9 +59,21 @@ const calculateRadarChartData = (unlockedSkills) => {
   };
 };
 
+// Function to generate arbitrary radar chart data
+const generateArbitraryRadarChartData = () => ({
+  labels: ['Balance', 'Push', 'Pull', 'Legs', 'Conditioning'],
+  datasets: [
+    {
+      data: [5, 6, 6, 3, 5], // Arbitrary data points
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      borderColor: 'rgba(255, 255, 255, 1)',
+      borderWidth: 2,
+    },
+  ],
+});
+
 // Radar chart options
 const radarChartOptions = {
-  maintainAspectRatio: true,
   responsive: true,
   scales: {
     r: {
@@ -93,16 +102,21 @@ const radarChartOptions = {
 };
 
 const RadarChart = () => {
-  // Use the skills context to get the completed skills, loading, and error state
   const { skills, loading, error } = useSkillContext();
+  const { token } = useAuth(); // Extract token from auth context
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    // Calculate radar chart data when completed skills are available
-    if (skills.length > 0) {
-      setChartData(calculateRadarChartData(skills));
+    if (token) {
+      // Calculate radar chart data when user is logged in and skills are available
+      if (skills.length > 0) {
+        setChartData(calculateRadarChartData(skills));
+      }
+    } else {
+      // Generate arbitrary radar chart data when no token is available
+      setChartData(generateArbitraryRadarChartData());
     }
-  }, [skills]);
+  }, [skills, token]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -115,9 +129,8 @@ const RadarChart = () => {
   if (!chartData) {
     return <div>No data available</div>;
   }
-  return (
-      <Radar data={chartData} options={radarChartOptions} />
-  );
+
+  return <Radar data={chartData} options={radarChartOptions} />;
 };
 
 export default RadarChart;

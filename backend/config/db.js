@@ -11,7 +11,7 @@ const initPool = () => {
     database: "lucky_cali_database",
     port: 3307,
     connectionLimit: 5,
-    connectTimeout: 5000 // 5 seconds
+    connectTimeout: 5000
   });
 };
 

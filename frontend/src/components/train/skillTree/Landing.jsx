@@ -39,13 +39,13 @@ const initialNodes = [
 
 const initialEdges = [
   createAnimatedEdge('foundations', 'push'), createAnimatedEdge('foundations', 'pull'), createAnimatedEdge('foundations', 'legs'),
-  createAnimatedEdge('push', 'pushups'), createStaticEdge('push', 'dips'), createAnimatedEdge('push', 'handstands'),
-  createStaticEdge('pull', 'pullups'), createAnimatedEdge('pull', 'rows'),
-  createAnimatedEdge('legs', 'squats'), createStaticEdge('legs', 'lunges'),
+  createAnimatedEdge('push', 'pushups'), createAnimatedEdge('push', 'dips'), createAnimatedEdge('push', 'handstands'),
+  createAnimatedEdge('pull', 'pullups'), createAnimatedEdge('pull', 'rows'),
+  createAnimatedEdge('legs', 'squats'), createAnimatedEdge('legs', 'lunges'),
   createAnimatedEdge('pushups', 'planche'),
-  createStaticEdge('handstands', 'handstand-pushups'),
+  createAnimatedEdge('handstands', 'handstand-pushups'),
   createAnimatedEdge('pullups', 'muscle-up'),
-  createStaticEdge('rows', 'front-lever'),
+  createAnimatedEdge('rows', 'front-lever'),
 ];
 
 const FlowDiagram = () => {

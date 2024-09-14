@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import api from '@/components/shared/api'; // Assuming you have a configured Axios instance
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/components/shared/auth/AuthProvider';
 
 const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
@@ -38,14 +39,34 @@ const WorkoutLogPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const logsPerPage = 6; // Number of logs per page
+  const { token } = useAuth();
+
+  // Sample logs to use when the user is not logged in
+  const sampleLogs = [
+    {
+      id: 1,
+      user_id: 0,
+      title: 'Sample Workout 1',
+      description: 'This is a sample workout log for demonstration purposes.',
+      date: '2024-09-01T10:00:00Z',
+      created_at: '2024-09-01T09:00:00Z',
+      updated_at: '2024-09-01T09:30:00Z',
+    },
+  ];
 
   useEffect(() => {
     const fetchLogs = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`/train/logs?page=${currentPage}&limit=${logsPerPage}`);
-        setLogs(response.data.logs);
-        setTotalPages(response.data.totalPages);
+        if (token) {
+          // Fetch real logs when the user is logged in
+          const response = await api.get(`/train/logs?page=${currentPage}&limit=${logsPerPage}`);
+          setLogs(response.data.logs);
+          setTotalPages(response.data.totalPages);
+        } else {
+          setLogs(sampleLogs);
+          setTotalPages(1); // Set total pages to 1 for sample data
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching workout logs:', error);

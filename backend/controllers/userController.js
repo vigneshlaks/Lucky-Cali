@@ -147,9 +147,9 @@ exports.getChallenges = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user challenges from the user table
+    // Fetch user challenges stored as JSON from the users table
     const userResult = await db.query(
-      'SELECT challenge1, challenge2, challenge3 FROM users WHERE id = ?',
+      'SELECT challenges FROM users WHERE id = ?',
       [userId]
     );
 
@@ -158,14 +158,177 @@ exports.getChallenges = async (req, res) => {
     }
 
     const user = userResult[0];
-
-    // Construct the response data
-    const challenges = [user.challenge1, user.challenge2, user.challenge3].filter(Boolean); // Remove null or undefined values
+    const challenges = user.challenges
 
     res.json({ challenges });
   } catch (error) {
     console.error('Error fetching challenges data:', error);
     res.status(500).json({ message: 'An error occurred while fetching challenges data.' });
+  }
+};
+
+const generateChallengesBasedOnSkills = async (completedSkills, challengeCount = 3, currentChallenges = []) => {
+  let fallbackSkills = ["floor-pu", "pull-up", "pb-dip"];
+  const selectedChallenges = [];
+
+  // Extract skill IDs from the current challenges to avoid duplicates
+  const currentChallengeIds = currentChallenges.map(challenge => challenge.skill);
+
+  // Filter completed skills to exclude those already in current challenges
+  const availableSkills = completedSkills.filter(skill => !currentChallengeIds.includes(skill.skill_id));
+
+  // Filter fallback skills to exclude those already in current challenges
+  fallbackSkills = fallbackSkills.filter(skill => !currentChallengeIds.includes(skill));
+
+  // Shuffle the filtered skills array to randomly pick skills
+  const shuffledSkills = availableSkills.sort(() => 0.5 - Math.random());
+
+  // Helper function to generate a random number in increments of 5
+  const generateRandomRepsOrSeconds = () => {
+    const min = 1;
+    const max = 4;
+    return (Math.floor(Math.random() * (max - min + 1)) + min) * 5;
+  };
+
+  // Select up to 'challengeCount' skills from the shuffled available skills
+  for (let i = 0; i < challengeCount && i < shuffledSkills.length; i++) {
+    selectedChallenges.push({
+      skill: shuffledSkills[i].skill_id,
+      repsOrSeconds: generateRandomRepsOrSeconds(),
+    });
+  }
+
+  // If there are fewer than 'challengeCount' skills, fill the remaining slots with fallback skills
+  while (selectedChallenges.length < challengeCount && fallbackSkills.length > 0) {
+    const fallbackSkill = fallbackSkills.pop();
+    selectedChallenges.push({
+      skill: fallbackSkill,
+      repsOrSeconds: generateRandomRepsOrSeconds(),
+    });
+  }
+
+  return selectedChallenges;
+};
+
+
+
+// Submit selected challenges
+exports.submitChallenges = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { checkedChallenges } = req.body;
+
+
+    const currentSkills = await db.query(
+      `SELECT u.skill_id
+       FROM user_skills u
+       WHERE u.user_id = ?
+       AND u.status = 2`,
+      [userId]
+    );
+
+    // Validate that challenges have been submitted
+    if (!checkedChallenges || !Array.isArray(checkedChallenges) || checkedChallenges.length === 0) {
+      return res.status(400).json({ message: 'No challenges selected' });
+    }
+
+    // Update user experience
+    await db.query('UPDATE users SET experience = experience + 10 WHERE id = ?', [userId]);
+
+    // Fetch the current challenges for the user
+    const userResult = await db.query('SELECT challenges FROM users WHERE id = ?', [userId]);
+
+    if (!userResult || !userResult.length) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Parse current challenges from the database
+    let currentChallenges = userResult[0].challenges;
+
+    const updatedChallenges = await Promise.all(
+      currentChallenges.map(async (challenge) => {
+        // Check if the challenge is among the ones that were checked/submitted by the user
+        const isChallengeChecked = checkedChallenges.some(
+          (checked) => checked.skill === challenge.skill && checked.repsOrSeconds === challenge.repsOrSeconds
+        );
+
+        // If the challenge was completed, generate a new one
+        if (isChallengeChecked) {
+          let newChallenge;
+          do {
+            // Generate a new challenge considering current skills and excluding current challenges
+            const generatedChallenges = await generateChallengesBasedOnSkills(currentSkills, 1, currentChallenges);
+            newChallenge = generatedChallenges[0]; // Get one new challenge
+          } while (currentChallenges.some(c => c.skill === newChallenge.skill)); // Ensure the new challenge is unique
+          return newChallenge;
+        }
+
+        // If the challenge was not completed, keep it as is
+        return challenge;
+      })
+    );
+
+    // Update the user's challenges in the database
+    await db.query('UPDATE users SET challenges = ? WHERE id = ?', [JSON.stringify(updatedChallenges), userId]);
+
+    res.status(200).json({ message: 'Challenges submitted successfully!' });
+  } catch (error) {
+    console.error('Error submitting challenges:', error);
+    res.status(500).json({ message: 'Error submitting challenges' });
+  }
+};
+
+exports.rerollChallenges = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Get the skills the user is currently working on
+    const completedSkills = await db.query(
+      `SELECT u.skill_id
+       FROM user_skills u
+       WHERE u.user_id = ?
+       AND u.status = 2`,
+      [userId]
+    );
+
+    // Generate new challenges based on the user's completed skills
+    const newChallenges = await generateChallengesBasedOnSkills(completedSkills);
+
+    // Update the user's challenges JSON column in the database
+    await db.query(
+      `UPDATE users
+       SET challenges = ?
+       WHERE id = ?`,
+      [JSON.stringify(newChallenges), userId]
+    );
+
+    res.json({ challenges: newChallenges });
+  } catch (error) {
+    console.error('Error updating challenges based on completed skills:', error);
+    res.status(500).json({ message: 'An error occurred while updating challenges.' });
+  }
+};
+
+exports.getUserStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch user data including the `in_competition` status
+    const user = await db.query('SELECT id, username, in_competition FROM users WHERE id = ?', [userId]);
+
+    if (!user || user.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the user's status
+    res.status(200).json({
+      id: user[0].id,
+      username: user[0].username,
+      in_competition: user[0].in_competition,
+    });
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+    res.status(500).json({ message: 'Failed to fetch user status', error: error.message });
   }
 };
 
@@ -249,58 +412,6 @@ exports.updateSkillStatus = async (req, res) => {
   }
 };
 
-exports.rerollChallenges = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    // Get the skills the user is currently working on
-    const completedSkills = await db.query(
-      `SELECT u.skill_id
-       FROM user_skills u
-       WHERE u.user_id = ${userId}
-       AND u.status = 1`
-    );
-
-    // Generate new challenges based on the user's completed skills
-    const newChallenges = await generateChallengesBasedOnSkills(completedSkills);
-
-    // Update the user's challenges in the database
-    await db.query(
-      `UPDATE users
-       SET challenge1 = ?, challenge2 = ?, challenge3 = ?
-       WHERE id = ?`,
-      [newChallenges[0], newChallenges[1], newChallenges[2], userId]
-    );
-
-    res.json({ challenges: newChallenges });
-  } catch (error) {
-    console.error('Error updating challenges based on completed skills:', error);
-    res.status(500).json({ message: 'An error occurred while updating challenges.' });
-  }
-};
-
-const generateChallengesBasedOnSkills = async (completedSkills) => {
-  // List of fallback skills if there are not enough completed skills
-  const fallbackSkills = ["floor-pu", "pull-up", "pb-dip"];
-  const selectedChallenges = [];
-
-  // Shuffle the completed skills array to randomly pick skills
-  const shuffledSkills = completedSkills.sort(() => 0.5 - Math.random());
-
-  // Select up to 3 skills from the shuffled completed skills
-  for (let i = 0; i < 3 && i < shuffledSkills.length; i++) {
-    selectedChallenges.push(shuffledSkills[i].skill_id);
-  }
-
-  // If there are fewer than 3 skills, fill the remaining slots with fallback skills
-  while (selectedChallenges.length < 3) {
-    const fallbackSkill = fallbackSkills.pop();
-    selectedChallenges.push(fallbackSkill);
-  }
-
-  return selectedChallenges;
-};
-
 exports.getCompletedSkills = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, async (err, user, info) => {
     try {
@@ -338,8 +449,6 @@ exports.updateSkillStatus = async (req, res) => {
   const { skillId } = req.params;
   const { status } = req.body;
   const userId = req.user.id;
-  console.log("hitting this");
-  console.log("skillId");
 
   // Validate the new status
   if (![1, 2, 3].includes(status)) {
@@ -410,5 +519,24 @@ exports.getAllSkills = async (req, res, next) => {
   } catch (error) {
     console.error('Unexpected error:', error);
     res.status(500).json({ message: 'An unexpected error occurred.' });
+  }
+};
+
+exports.logoutUser = (req, res) => {
+  try {
+    // Clear the refreshToken cookie
+    res.cookie('refreshToken', '', {
+      httpOnly: true,
+      secure: true, 
+      sameSite: 'Strict', 
+      maxAge: 0, 
+      path: '/',
+    });
+
+    // Send a response to confirm logout
+    res.status(200).json({ message: 'Successfully logged out' });
+  } catch (error) {
+    console.error('Error logging out:', error);
+    res.status(500).json({ message: 'An error occurred while logging out' });
   }
 };
