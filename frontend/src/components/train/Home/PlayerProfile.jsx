@@ -22,9 +22,11 @@ const PlayerProfile = () => {
         }
         console.log(data);
         // Update state with the received experience and rank data
-        if (data) {
-          setExperience(data.experience || 0);
-          setRank(data.rank || 0);
+        if (data != null) {
+          console.log("in here")
+          console.log(data);
+          setExperience(data.data.experience || 0);
+          setRank(data.data.rank || 0);
         }
       } catch (error) {
         console.error('Error fetching player data:', error);
@@ -60,12 +62,12 @@ const PlayerProfile = () => {
           <div className="flex items-center space-x-2">
             <div className="text-lg font-medium">Experience:</div>
             <div className="flex items-center">
-              <div className="text-white text-lg font-medium">{experience}</div>
+              <div className="text-white text-lg font-medium">{experience} xp</div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="text-white text-lg font-medium">Rank:</div>
-            <div className="text-white text-lg font-medium">{rank}</div>
+            <div className="text-white text-lg font-medium">Rank: </div>
+            <div className="text-white text-lg font-medium">{rank > 0 ? rank : "Unranked"} </div>
           </div>
         </div>
       </div>

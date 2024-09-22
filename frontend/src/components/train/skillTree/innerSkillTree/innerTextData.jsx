@@ -19,5 +19,8 @@ export const textDiagramData = {
       title: 'Dips',
       body: 'Dips target your triceps, chest, and shoulders.'
     },
+    default: {
+      title: ''
+    }
   };
   
