@@ -26,7 +26,7 @@ const LandingPage = () => {
             <div className="flex flex-wrap -m-4 text-center">
               <div className="p-4 sm:w-1/3 w-1/2">
                 <h2 className="title-font font-medium sm:text-5xl text-3xl text-white">
-                  <CountUp end={940} redraw={true}>
+                  <CountUp end={120} redraw={true}>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -38,7 +38,7 @@ const LandingPage = () => {
               </div>
               <div className="p-4 sm:w-1/3 w-1/2">
                 <h2 className="title-font font-medium sm:text-5xl text-3xl text-white">
-                  <CountUp end={740} redraw={true}>
+                  <CountUp end={222} redraw={true}>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -46,11 +46,11 @@ const LandingPage = () => {
                     )}
                   </CountUp>
                 </h2>
-                <p className="leading-relaxed">Subscribes</p>
+                <p className="leading-relaxed">LLM Requests</p>
               </div>
               <div className="p-4 sm:w-1/3 w-1/2">
                 <h2 className="title-font font-medium sm:text-4xl text-3xl text-white">
-                  <CountUp end={315} redraw={true}>
+                  <CountUp end={38} redraw={true}>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -58,7 +58,7 @@ const LandingPage = () => {
                     )}
                   </CountUp>
                 </h2>
-                <p className="leading-relaxed">Downloads</p>
+                <p className="leading-relaxed">Contests</p>
               </div>
             </div>
           </div>

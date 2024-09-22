@@ -9,7 +9,7 @@ const competeRoutes = require('./routes/competeRoutes');
 const passport = require('passport');
 const trainRoutes = require('./routes/trainRoutes');
 const cookieParser = require('cookie-parser');
-require('./config/passport'); // Ensure passport configurations are loaded
+require('./config/passport');
 
 const app = express();
 const PORT = process.env.PORT || 1000;
@@ -18,11 +18,18 @@ const PORT = process.env.PORT || 1000;
 connectDB();
 
 // Middleware
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend's URL
+  origin: 'http://localhost:5173',
   credentials: true
 }));
 
+/*
+app.use(cors({
+  origin: '*',  // This allows all origins
+  credentials: true
+}));
+*/
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

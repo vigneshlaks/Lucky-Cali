@@ -16,7 +16,6 @@ const CustomNode = memo(({ data }) => {
 
     setSkills(updatedSkills); 
   
-    // Update the status in the context (which might also update the backend)
     updateSkillStatus(id, newStatus);
   };
 

@@ -154,7 +154,7 @@ const LayoutWithNavbar = () => {
         endTabs={currentLayout.getEndTabs(isAuthenticated)} 
         
       />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         <AnimatedOutlet className="" tabs={currentLayout.middleTabs} />
       </div>
     </div>

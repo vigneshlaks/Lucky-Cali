@@ -20,5 +20,6 @@ router.post('/rerollChallenges', authenticateJWT, userController.rerollChallenge
 router.post('/submitChallenges', authenticateJWT, userController.submitChallenges);
 
 router.get('/status', authenticateJWT, userController.getUserStatus);
+router.get('/stats', authenticateJWT, userController.getUserRankAndExperience);
 
 module.exports = router;

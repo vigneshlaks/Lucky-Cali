@@ -5,20 +5,23 @@ import PlayerProfile from '@/components/train/Home/PlayerProfile';
 
 const TrainHomePage = () => {
   return (
-    <div className='flex flex-grow'>
-      <div className="bg-black text-white p-5 flex">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col space-y-5">
-            <Challenges className="flex-grow" />
-            <PlayerProfile className="flex-grow" />
+    <div className="h-[95vh]">
+      <div className="h-full bg-black text-white p-5">
+        <div className="h-full flex gap-4">
+          <div className="flex-1 space-y-5 h-full flex flex-col overflow-hidden">
+            <div className="">
+              <Challenges />
+            </div>
+            <div className="flex-grow overflow-auto">
+              <PlayerProfile />
+            </div>
           </div>
-          <div>
+          <div className="flex-1 h-full overflow-auto">
             <WorkoutLog />
           </div>
         </div>
       </div>
     </div>
-    
   );
 };
 

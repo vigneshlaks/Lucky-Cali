@@ -19,9 +19,10 @@ services:
       - DB_HOST=mariadb
       - DB_USER=root
       - DB_PASSWORD=password
-      - DB_NAME=cali_db
+      - DB_NAME=lucky_cali_db
     ports:
       - "5001:5000"
+      - "1001:1001"
     depends_on:
       - mariadb
 
@@ -31,7 +32,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:3000"
+      - "5173:5173"
 
 volumes:
   mariadb_data:

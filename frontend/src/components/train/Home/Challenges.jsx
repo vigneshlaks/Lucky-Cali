@@ -19,7 +19,7 @@ const Challenges = () => {
   useEffect(() => {
     if (!token) {
       setChallenges(
-        [{"skill":"lunge","repsOrSeconds":10},
+          [{"skill":"lunge","repsOrSeconds":10},
           {"skill":"jump-lunge","repsOrSeconds":15},
           {"skill":"negative-pullup","repsOrSeconds":20}]
         )
