@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../../ui/button";
-import api from '@/components/shared/api'; // Assuming your API configuration is here
+import api from '@/components/shared/api';
 import { Toaster, toast } from 'sonner';
 import { useAuth } from '@/components/shared/auth/AuthProvider';
 
@@ -21,7 +21,7 @@ export default function WorkoutLog() {
   useEffect(() => {
     const fetchExistingLog = async () => {
       try {
-        if(token){
+        if (token) {
           const response = await api.get(`/train/logs/today`);
           if (response.data.log) {
             setFormValues({
@@ -49,50 +49,46 @@ export default function WorkoutLog() {
     const today = new Date().toISOString().split('T')[0];
 
     try {
-        if (token){
-          // Check if a log for today exists
-          const checkResponse = await api.get('train/logs/today');
-          if (checkResponse.data && checkResponse.data.log) {
-              // Update the existing log
-              const response = await api.put('train/logs', {
-                  title: formValues.title,
-                  description: formValues.description,
-              });
-              toast.success('Log Updated!');
-              console.log('Workout log updated:', response.data);
-          } else {
-              // Create a new log
-              const response = await api.post('train/logs', {
-                  title: formValues.title,
-                  description: formValues.description,
-                  date: today,
-              });
-              toast.success('Log Submitted!');
-              console.log('Workout log created:', response.data);
-          }
-        } else{
-          toast('Sign in to Submit Logs');
+      if (token) {
+        const checkResponse = await api.get('train/logs/today');
+        if (checkResponse.data && checkResponse.data.log) {
+          const response = await api.put('train/logs', {
+            title: formValues.title,
+            description: formValues.description,
+          });
+          toast.success('Log Updated!');
+          console.log('Workout log updated:', response.data);
+        } else {
+          const response = await api.post('train/logs', {
+            title: formValues.title,
+            description: formValues.description,
+            date: today,
+          });
+          toast.success('Log Submitted!');
+          console.log('Workout log created:', response.data);
         }
-      
+      } else {
+        toast('Sign in to Submit Logs');
+      }
 
       setSubmitted(true);
     } catch (error) {
-        console.error("Error submitting workout log:", error.response?.data || error.message);
+      console.error("Error submitting workout log:", error.response?.data || error.message);
     }
-};
+  };
 
   const handleInsight = async () => {
     toast('Feature Temporarily Down');
   };
 
   return (
-    <Card className="bg-black text-white border shadow-lg rounded-lg overflow-hidden h-full flex flex-col">
+    <Card className="bg-black text-white border shadow-lg rounded-lg flex flex-col h-full">
       <Toaster />
       <div className="px-6 py-5 flex justify-between items-center border-b border-gray-800">
         <CardTitle>Workout Log</CardTitle>
         <CardDescription>State how today's workout went</CardDescription>
       </div>
-      <CardContent className="flex-grow flex flex-col space-y-4 p-6">
+      <CardContent className="flex flex-col flex-grow space-y-4 p-6 overflow-y-auto">
         <div className="flex flex-col space-y-2">
           <Label htmlFor="title" className="text-lg font-medium">Title</Label>
           <Input
@@ -103,11 +99,11 @@ export default function WorkoutLog() {
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col flex-grow space-y-2">
+        <div className="flex flex-col flex-grow">
           <Label htmlFor="description" className="text-lg font-medium">Description</Label>
           <Textarea
             id="description"
-            className="flex-grow bg-black text-white rounded-md p-2 border border-gray-800 focus:border-white transition-colors resize-none"
+            className="flex-grow bg-black text-white rounded-md p-2 border border-gray-800 focus:border-white transition-colors resize-none h-full"
             value={formValues.description}
             onChange={handleChange}
           />

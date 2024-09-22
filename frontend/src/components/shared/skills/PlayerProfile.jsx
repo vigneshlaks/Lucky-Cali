@@ -73,7 +73,7 @@ const PlayerProfile = () => {
         </div>
       </CardContent>
       <CardContent>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center min-h-[200px]">
           <RadarChart completedSkills={unlockedSkillIds} />
         </div>
       </CardContent>

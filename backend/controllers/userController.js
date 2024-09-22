@@ -540,3 +540,31 @@ exports.logoutUser = (req, res) => {
     res.status(500).json({ message: 'An error occurred while logging out' });
   }
 };
+
+// Controller function to get the user's rank and experience
+exports.getUserRankAndExperience = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch rank and experience from the users table
+    const [user] = await db.query(
+      'SELECT rank, experience FROM users WHERE id = ?',
+      [userId]
+    );
+
+    // Check if user data is retrieved successfully
+    if (!user || user.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the user's rank and experience
+    res.status(200).json({
+      rank: user.rank,
+      experience: user.experience,
+    });
+  } catch (error) {
+    console.error('Error fetching rank and experience:', error);
+    res.status(500).json({ message: 'Failed to fetch rank and experience', error: error.message });
+  }
+};
+

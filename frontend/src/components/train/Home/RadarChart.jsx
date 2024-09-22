@@ -75,6 +75,7 @@ const generateArbitraryRadarChartData = () => ({
 // Radar chart options
 const radarChartOptions = {
   responsive: true,
+  maintainAspectRatio: true,
   scales: {
     r: {
       angleLines: {

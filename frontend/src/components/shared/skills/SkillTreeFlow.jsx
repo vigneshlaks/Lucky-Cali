@@ -10,6 +10,7 @@ import 'reactflow/dist/style.css';
 import CustomNode from './CustomNode';
 import { skillsData } from '../skillsData';
 import PlayerProfileNode from './PlayerProfileNode';
+import { createStaticEdge } from '@/components/train/skillTree/skillTreeUtils';
 
 // Helper function to create an animated edge
 const createAnimatedEdge = (source, target) => ({
@@ -39,12 +40,12 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
     createNode('player-profile', 'Player Profile', 50, 50, 0, 'playerProfile'),
   
     // Main Categories spaced with more vertical and horizontal room
-    createNode('foundations', 'Foundations', 1000, 200, 0),
+    createNode('foundations', 'Foundations', 1115, 200, 0),
   
     // Main Categories (Push, Pull, Legs) positioned below Foundations with increased spacing
     createNode('push', 'Push', 375, 500, 1),
-    createNode('pull', 'Pull', 1050, 500, 1),
-    createNode('legs', 'Legs', 1500, 500, 1),
+    createNode('pull', 'Pull', 1150, 500, 1),
+    createNode('legs', 'Legs', 1700, 500, 1),
   
     // Upper Body Push nodes directly below Push with increased vertical spacing
     createNode('pushups', 'Pushups', 0, 800, 2),
@@ -56,14 +57,14 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
     createNode('rows', 'Rows', 1200, 800, 2),
   
     // Lower Body nodes directly below Legs with increased vertical spacing
-    createNode('squats', 'Squats', 1400, 800, 2),
-    createNode('lunges', 'Lunges', 1600, 800, 2),
+    createNode('squats', 'Squats', 1500, 800, 2),
+    createNode('lunges', 'Lunges', 1800, 800, 2),
   
     // Advanced Movements spaced further below respective categories with increased vertical spacing
-    createNode('planche', 'Planche', 70, 1100, 3),             
-    createNode('handstandPushups', 'Handstand Pushups', 630, 1100, 3), 
-    createNode('muscleUp', 'Muscle Up', 971, 1100, 3),           
-    createNode('frontLever', 'Front Lever', 1200, 1100, 3),      
+    createNode('planche', 'Planche', -20, 1100, 3),             
+    createNode('handstandPushups', 'Handstand Pushups', 590, 1100, 3), 
+    createNode('muscleUps', 'Muscle Up', 888, 1100, 3),           
+    createNode('frontLever', 'Front Lever', 1187, 1100, 3),      
   ];
 
 
@@ -136,9 +137,9 @@ const generateNodesAndEdges = (data, skills, onStatusChange) => {
     createAnimatedEdge('legs', 'squats'),
     createAnimatedEdge('legs', 'lunges'),
     createAnimatedEdge('pushups', 'planche'),
-    createAnimatedEdge('handstands', 'handstand-pushups'),
-    createAnimatedEdge('pullups', 'muscle-up'),
-    createAnimatedEdge('rows', 'front-lever'),
+    createAnimatedEdge('handstands', 'handstandPushups'),
+    createAnimatedEdge('pullups', 'muscleUps'),
+    createAnimatedEdge('rows', 'frontLever'),
   ];
 
   return { nodes, edges };
