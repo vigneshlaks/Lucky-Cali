@@ -27,17 +27,35 @@ const InnerPage = () => {
           <h1 className="text-3xl font-bold mb-4">{selectedTextData.title}</h1>
           <div className="border-t border-white mt-2"></div>
           <p className="text-gray-300 leading-relaxed">{selectedTextData.body}</p>
-          {/* Add a back button to return to the diagram */}
           <button
             onClick={() => setSelectedNodeId(null)}
-            className="mt-4 px-4 py-2 bg-gray-700 text-white rounded"
+            className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
           >
             Back to Diagram
           </button>
         </div>
       );
     } else {
-      return <p>No text data available for node ID: {selectedNodeId}</p>;
+      return (
+        <div className="bg-black text-white min-h-screen p-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-black rounded-lg p-6">
+              <p className="text-white leading-relaxed text-center">
+                Detailed information for this skill is currently being developed. 
+                Please check back later for updates on this skill node.
+              </p>
+            </div>
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={() => setSelectedNodeId(null)}
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+              >
+                Back to Diagram
+              </button>
+            </div>
+          </div>
+        </div>
+      );
     }
   }
 

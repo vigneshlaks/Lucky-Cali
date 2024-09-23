@@ -3,7 +3,7 @@ const mariadb = require('mariadb');
 
 let pool;
 
-/*
+
 const initPool = () => {
   pool = mariadb.createPool({
     host: "mariadb",
@@ -15,19 +15,20 @@ const initPool = () => {
     connectTimeout: 5000
   });
 };
-*/
 
+/*
 const initPool = () => {
   pool = mariadb.createPool({
     host: "localhost",
     user: "root",
     password: "password",
     database: "lucky_cali_database",
-    port: 3307,
+    port: 3306,
     connectionLimit: 5,
     connectTimeout: 5000
   });
 };
+*/
 
 const connectDB = async () => {
   if (!pool) initPool();

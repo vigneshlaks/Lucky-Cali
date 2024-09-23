@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import api from '@/components/shared/api'; // Assuming you have a configured Axios instance
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/shared/auth/AuthProvider';
+import { Toaster, toast } from 'sonner';
 
 const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
@@ -10,18 +11,36 @@ const truncateText = (text, maxLength) => {
 };
 
 const LogCard = ({ id, title, content, date }) => {
-  return (
-    <Link to={`/train/logs/${id}`} className="block">
-      <div className="bg-gray-950 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-gray-700 hover:scale-105 border border-gray-800">
-        <div className="p-6">
-          <h3 className="text-2xl font-bold text-gray-100 mb-3">{title}</h3>
-          <p className="text-gray-400 mb-4 text-lg">{truncateText(content, 25)}</p>
-        </div>
-        <div className="bg-black px-6 py-3 flex justify-end items-center">
-          <span className="text-sm text-gray-500">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-        </div>
+  const { token } = useAuth();
+
+  const handleCardClick = () => {
+    if (!token) {
+      toast.error("Please log in to view detailed workout logs", {
+        duration: 3000,
+      });
+    }
+  };
+
+  const cardContent = (
+    <div className="bg-gray-950 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-gray-700 hover:scale-105 border border-gray-800">
+      <div className="p-6">
+        <h3 className="text-2xl font-bold text-gray-100 mb-3">{title}</h3>
+        <p className="text-gray-400 mb-4 text-lg">{truncateText(content, 25)}</p>
       </div>
+      <div className="bg-black px-6 py-3 flex justify-end items-center">
+        <span className="text-sm text-gray-500">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      </div>
+    </div>
+  );
+
+  return token ? (
+    <Link to={`/train/logs/${id}`} className="block">
+      {cardContent}
     </Link>
+  ) : (
+    <div onClick={handleCardClick} className="cursor-pointer">
+      {cardContent}
+    </div>
   );
 };
 
@@ -98,6 +117,7 @@ const WorkoutLogPage = () => {
 
   return (
     <div className="bg-black text-white min-h-screen p-8">
+      <Toaster />
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">Logs</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
