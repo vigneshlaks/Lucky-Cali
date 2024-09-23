@@ -45,9 +45,14 @@ const Challenges = () => {
   const handleReroll = async () => {
     try {
       setLoading(true);
-      const { data } = await api.post('/user/rerollChallenges');
-      setChallenges(data.challenges || []);
-      setCheckedChallenges([]);
+      if (token) {
+        const { data } = await api.post('/user/rerollChallenges');
+        setChallenges(data.challenges || []);
+        setCheckedChallenges([]);
+      }
+      else {
+        toast.error('Please Sign In to Reroll');
+      }
     } catch (error) {
       console.error('Error rerolling challenges:', error);
       setError(error);
@@ -63,7 +68,7 @@ const Challenges = () => {
     }
 
     if (!token) {
-      toast('Sign In to Submit Challenges');
+      toast.error('Please Sign In to Submit Challenges');
       return;
     }
 

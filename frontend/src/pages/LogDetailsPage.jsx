@@ -13,6 +13,7 @@ const LogDetailsPage = () => {
     const fetchLog = async () => {
       try {
         const response = await api.get(`train/logs/${id}`);
+        console.log(response.data);
         setLog(response.data);
         setLoading(false);
       } catch (error) {
@@ -24,6 +25,8 @@ const LogDetailsPage = () => {
 
     fetchLog();
   }, [id]);
+  
+  console.log(log);
 
   if (loading) {
     return (
