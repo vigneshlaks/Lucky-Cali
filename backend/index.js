@@ -19,8 +19,16 @@ connectDB();
 
 // Middleware
 
+/*
 app.use(cors({
   origin: 'http://localhost:5173',
+  credentials: true
+}));
+*/
+
+
+app.use(cors({
+  origin: 'https://auth.localhost',
   credentials: true
 }));
 
@@ -41,6 +49,7 @@ app.use('/user', userRoutes);
 app.use('/auth', authRoutes);
 app.use('/train', trainRoutes);
 app.use('/compete', competeRoutes);
+
 
 // Start the server
 app.listen(PORT, () => {
