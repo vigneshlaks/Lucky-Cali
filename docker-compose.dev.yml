@@ -17,6 +17,9 @@ services:
     container_name: backend
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend:/usr/src/app/backend
+      - /app/node_modules
     depends_on:
       - mariadb
     networks:
@@ -25,26 +28,28 @@ services:
   frontend:
     build: 
       context: ./frontend
-      target: production
+      target: development
     container_name: frontend
     restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - lucky-cali
     depends_on:
       - backend
-
+    command: npm run dev -- --host
 
   caddy:
-    build:
-      context: ./caddy
-      dockerfile: Dockerfile
+    image: caddy:2-alpine
     container_name: caddy
-    environment:
-      DOMAIN_NAME: ${DOMAIN_NAME}
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     networks:
