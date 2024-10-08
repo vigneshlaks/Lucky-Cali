@@ -1,5 +1,7 @@
+# Development Stage
+
 # Use an official Node.js runtime as the base image
-FROM node:20
+FROM node:20 as developement
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -13,5 +15,11 @@ RUN npm ci
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
+RUN npm run build
+
+# Production Stage
+FROM caddy:2-alpine as production
+
+COPY Caddyfile /etc/caddy/Caddyfile
+
+COPY --from=developement /app/dist /srv
