@@ -27,7 +27,7 @@ app.use(cors({
 */
 
 app.use(cors({
-  origin: 'https://www.lucky-cali.com',
+  origin: 'https://lucky-cali.com',
   credentials: true
 }));
 
