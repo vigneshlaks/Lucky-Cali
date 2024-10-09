@@ -26,11 +26,11 @@ app.use(cors({
 }));
 */
 
-
 app.use(cors({
-  origin: 'https://auth.localhost',
+  origin: 'https://www.lucky-cali.com',
   credentials: true
 }));
+
 
 /*
 app.use(cors({
