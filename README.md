@@ -2,9 +2,9 @@
 
 ## Overview
 
-This project is a comprehensive, user-facing bodyweight fitness website powered by advanced LLM technology, which combines cutting-edge AI capabilities with web development practices.
+This project is a comprehensive, user-facing bodyweight fitness website
 
-## Features
+## Features (Current and Projected)
 
 ### Training
 - **Custom LLM Agent**: Utilizes OpenAI's GPT-3.5 to process queries with 95% accuracy.
@@ -30,10 +30,10 @@ This project is a comprehensive, user-facing bodyweight fitness website powered 
 
 ### Backend
 - Node.js
-- MongoDB
+- SQL
 - OpenAI API
 
-### AI and Machine Learning
+### Current Work: AI and Machine Learning
 - OpenAI's GPT-3.5
 - FAISS for vector embeddings and similarity search
 
@@ -41,42 +41,16 @@ This project is a comprehensive, user-facing bodyweight fitness website powered 
 - JWT (JSON Web Tokens)
 - bcrypt for password hashing
 
-## Key Achievements
-
-- Architected a RAG system processing 1,000+ queries with 95% accuracy.
-- Implemented vector embeddings with FAISS, reducing query time by 70%.
-- Designed a custom prompt engineering pipeline for improved context-relevance in LLM responses.
-- Developed robust authentication system to protect against common vulnerabilities.
-
 ## Getting Started
 
 To get started with this project:
 
-1. Clone the repository
-2. Install dependencies:
-   ```
-   cd frontend && npm install
-   cd ../backend && npm install
-   ```
-4. Run the development servers:
-   ```
-   # In the frontend directory
-   npm start
-
-   # In the backend directory
-   npm run dev
-   ```
+Fully Docker Optimized Service
 
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Contributions are welcome! Please feel free to submit a Pull Request!
 
 ## License
 
