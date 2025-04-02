@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from "@/components/ui/checkbox";
-import { skillsData } from '@/components/shared/skillsData'; // Import skillsData to map skills to labels and types
+import { skillsData } from '@/components/shared/skillsData'; 
 import Challenges from './Challenges';
 
-// Helper function to get skill details from skillsData
 const getSkillDetails = (skillId) => {
   for (const category in skillsData) {
     const skill = skillsData[category].nodes.find(node => node.id === skillId);
@@ -15,7 +14,6 @@ const getSkillDetails = (skillId) => {
   return null;
 };
 
-// Function to format the challenge description
 const formatChallengeLabel = (challenge) => {
   const skillDetails = getSkillDetails(challenge.skill);
 

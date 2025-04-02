@@ -1,37 +1,31 @@
 import React from 'react';
 import ActivityCalendar from 'react-activity-calendar';
 
-// Function to generate comprehensive activity data including zero values
 const generateActivityDataWithZeros = (existingData) => {
   const data = [];
   const currentDate = new Date();
   const startDate = new Date();
   startDate.setFullYear(currentDate.getFullYear() - 1);
 
-  // Create a map for existing data for quick lookup
   const existingDataMap = new Map(existingData.map(item => [item.date, item]));
 
-  // Generate data for each day from startDate to currentDate
   while (startDate <= currentDate) {
-    const dateStr = startDate.toISOString().split('T')[0]; // Convert date to string format YYYY-MM-DD
+    const dateStr = startDate.toISOString().split('T')[0]; 
     if (existingDataMap.has(dateStr)) {
-      // If there is existing data for the date, use it
       data.push(existingDataMap.get(dateStr));
     } else {
-      // Otherwise, add an entry with count 0 and level 0
       data.push({
         date: dateStr,
         count: 0,
         level: 0
       });
     }
-    startDate.setDate(startDate.getDate() + 1); // Move to the next day
+    startDate.setDate(startDate.getDate() + 1); 
   }
 
   return data;
 };
 
-// Example existing data
 const existingActivityData = [
   {
     "date": "2023-06-14",
@@ -50,7 +44,6 @@ const existingActivityData = [
   } 
 ];
 
-// Generate activity data including zero values
 const activityData = generateActivityDataWithZeros(existingActivityData);
 
 const CheckIn = () => {
@@ -58,10 +51,10 @@ const CheckIn = () => {
     <div style={{ width: '100%', overflow: 'hidden' }}>
       <ActivityCalendar
         data={activityData}
-        blockSize={9.5}  // Smaller block size
-        blockMargin={3} // Smaller block margin
+        blockSize={9.5}  
+        blockMargin={3} 
         theme={{
-          light: ['#333333', '#666666', '#999999', '#cccccc', '#ffffff'], // Gradient from dark gray to white
+          light: ['#333333', '#666666', '#999999', '#cccccc', '#ffffff'], 
           dark: ['#333333', '#666666', '#999999', '#cccccc', '#ffffff']
         }}
         labels={{

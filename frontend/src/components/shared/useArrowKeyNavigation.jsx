@@ -7,18 +7,16 @@ const useArrowKeyNavigation = (nextPagePath, previousPagePath) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowRight') {
-        navigate(nextPagePath); // Navigate to the next page
+        navigate(nextPagePath); 
       } else if (event.key === 'ArrowLeft') {
         if (previousPagePath !== -1) {
-          navigate(previousPagePath); // Navigate to the previous page
+          navigate(previousPagePath); 
         }
       }
     };
 
-    // Attach event listener
     window.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };

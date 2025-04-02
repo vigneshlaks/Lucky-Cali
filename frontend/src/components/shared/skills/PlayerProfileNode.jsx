@@ -1,6 +1,6 @@
 // PlayerProfileNode.js
 import React from 'react';
-import PlayerProfile from './PlayerProfile'; // Adjust the path as needed
+import PlayerProfile from './PlayerProfile'; 
 
 const PlayerProfileNode = ({ data }) => {
     return (

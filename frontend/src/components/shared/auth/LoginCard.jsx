@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "./AuthProvider";
 
 const LoginCard = () => {
-  const { setToken } = useAuth(); // Access setToken from AuthProvider context
+  const { setToken } = useAuth(); 
   const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -36,12 +36,10 @@ const LoginCard = () => {
     try {
       const response = await api.post('/user/login', data);
 
-      // Assuming response contains an accessToken
       if (response?.data?.accessToken) {
-        setToken(response.data.accessToken); // Properly set the token
+        setToken(response.data.accessToken); 
       }
 
-      // Redirect user after successful login
       const from = location.state?.from?.pathname || '/train/';
       navigate(from, { replace: true });
     } catch (error) {

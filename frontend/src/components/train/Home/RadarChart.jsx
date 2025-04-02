@@ -22,7 +22,6 @@ ChartJS.register(
   Legend
 );
 
-// Function to calculate radar chart data based on unlocked skills
 const calculateRadarChartData = (unlockedSkills) => {
   const totalScores = { balance: 0, push: 0, pull: 0, legs: 0, conditioning: 0 };
   let skillCount = 0;
@@ -43,7 +42,7 @@ const calculateRadarChartData = (unlockedSkills) => {
   });
 
   const normalizedScores = Object.values(totalScores).map((score) =>
-    skillCount > 0 ? Math.round((score / skillCount) * 2) : 0 // Scale to 0-10
+    skillCount > 0 ? Math.round((score / skillCount) * 2) : 0 
   );
 
   return {
@@ -59,12 +58,11 @@ const calculateRadarChartData = (unlockedSkills) => {
   };
 };
 
-// Function to generate arbitrary radar chart data
 const generateArbitraryRadarChartData = () => ({
   labels: ['Balance', 'Push', 'Pull', 'Legs', 'Conditioning'],
   datasets: [
     {
-      data: [5, 6, 6, 3, 5], // Arbitrary data points
+      data: [5, 6, 6, 3, 5], 
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
       borderColor: 'rgba(255, 255, 255, 1)',
       borderWidth: 2,
@@ -72,7 +70,6 @@ const generateArbitraryRadarChartData = () => ({
   ],
 });
 
-// Radar chart options
 const radarChartOptions = {
   responsive: true,
   maintainAspectRatio: true,
@@ -104,12 +101,11 @@ const radarChartOptions = {
 
 const RadarChart = () => {
   const { skills, loading, error } = useSkillContext();
-  const { token } = useAuth(); // Extract token from auth context
+  const { token } = useAuth(); 
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
     if (token) {
-      // Calculate radar chart data when user is logged in and skills are available
       if (skills.length > 0) {
         setChartData(calculateRadarChartData(skills));
       }

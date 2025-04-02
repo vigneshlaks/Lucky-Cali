@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert the user into the database
+     
         const result = await db.query(
             'INSERT INTO users (username, email, password, joinedDate) VALUES (?, ?, ?, NOW())',
             [username, email, hashedPassword]
@@ -44,7 +44,7 @@ exports.registerUser = async (req, res) => {
             joinedDate: new Date().toISOString().split('T')[0],
         };
 
-        // Send the response
+      
         res.status(201).json({
             success: true,
             message: 'User registered successfully.',
@@ -91,7 +91,6 @@ exports.getObjectives = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user goals and challenges from the user table
     const userResult = await db.query(
       'SELECT goal1, goal2, goal3, challenge1, challenge2, challenge3 FROM users WHERE id = ?',
       [userId]
@@ -103,7 +102,6 @@ exports.getObjectives = async (req, res) => {
 
     const user = userResult[0];
 
-    // Construct the response data
     const responseData = {
       goals: [user.goal1, user.goal2, user.goal3].filter(Boolean), 
       challenges: [user.challenge1, user.challenge2, user.challenge3].filter(Boolean),
@@ -121,7 +119,7 @@ exports.getGoals = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user goals from the user table
+    
     const userResult = await db.query(
       'SELECT goal1, goal2, goal3 FROM users WHERE id = ?',
       [userId]
@@ -133,8 +131,8 @@ exports.getGoals = async (req, res) => {
 
     const user = userResult[0];
 
-    // Construct the response data
-    const goals = [user.goal1, user.goal2, user.goal3].filter(Boolean); // Remove null or undefined values
+    
+    const goals = [user.goal1, user.goal2, user.goal3].filter(Boolean); 
 
     res.json({ goals });
   } catch (error) {
@@ -147,7 +145,7 @@ exports.getChallenges = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user challenges stored as JSON from the users table
+    
     const userResult = await db.query(
       'SELECT challenges FROM users WHERE id = ?',
       [userId]
@@ -171,26 +169,21 @@ const generateChallengesBasedOnSkills = async (completedSkills, challengeCount =
   let fallbackSkills = ["floor-pu", "pull-up", "pb-dip"];
   const selectedChallenges = [];
 
-  // Extract skill IDs from the current challenges to avoid duplicates
   const currentChallengeIds = currentChallenges.map(challenge => challenge.skill);
 
-  // Filter completed skills to exclude those already in current challenges
   const availableSkills = completedSkills.filter(skill => !currentChallengeIds.includes(skill.skill_id));
 
-  // Filter fallback skills to exclude those already in current challenges
   fallbackSkills = fallbackSkills.filter(skill => !currentChallengeIds.includes(skill));
 
-  // Shuffle the filtered skills array to randomly pick skills
   const shuffledSkills = availableSkills.sort(() => 0.5 - Math.random());
 
-  // Helper function to generate a random number in increments of 5
+  
   const generateRandomRepsOrSeconds = () => {
     const min = 1;
     const max = 4;
     return (Math.floor(Math.random() * (max - min + 1)) + min) * 5;
   };
 
-  // Select up to 'challengeCount' skills from the shuffled available skills
   for (let i = 0; i < challengeCount && i < shuffledSkills.length; i++) {
     selectedChallenges.push({
       skill: shuffledSkills[i].skill_id,
@@ -212,7 +205,7 @@ const generateChallengesBasedOnSkills = async (completedSkills, challengeCount =
 
 
 
-// Submit selected challenges
+
 exports.submitChallenges = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -227,48 +220,46 @@ exports.submitChallenges = async (req, res) => {
       [userId]
     );
 
-    // Validate that challenges have been submitted
+    
     if (!checkedChallenges || !Array.isArray(checkedChallenges) || checkedChallenges.length === 0) {
       return res.status(400).json({ message: 'No challenges selected' });
     }
 
-    // Update user experience
+    
     await db.query('UPDATE users SET experience = experience + 10 WHERE id = ?', [userId]);
 
-    // Fetch the current challenges for the user
+    
     const userResult = await db.query('SELECT challenges FROM users WHERE id = ?', [userId]);
 
     if (!userResult || !userResult.length) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Parse current challenges from the database
+    
     let currentChallenges = userResult[0].challenges;
 
     const updatedChallenges = await Promise.all(
       currentChallenges.map(async (challenge) => {
-        // Check if the challenge is among the ones that were checked/submitted by the user
+        
         const isChallengeChecked = checkedChallenges.some(
           (checked) => checked.skill === challenge.skill && checked.repsOrSeconds === challenge.repsOrSeconds
         );
 
-        // If the challenge was completed, generate a new one
+        
         if (isChallengeChecked) {
           let newChallenge;
           do {
-            // Generate a new challenge considering current skills and excluding current challenges
+            
             const generatedChallenges = await generateChallengesBasedOnSkills(currentSkills, 1, currentChallenges);
-            newChallenge = generatedChallenges[0]; // Get one new challenge
+            newChallenge = generatedChallenges[0]; 
           } while (currentChallenges.some(c => c.skill === newChallenge.skill)); // Ensure the new challenge is unique
           return newChallenge;
         }
 
-        // If the challenge was not completed, keep it as is
         return challenge;
       })
     );
 
-    // Update the user's challenges in the database
     await db.query('UPDATE users SET challenges = ? WHERE id = ?', [JSON.stringify(updatedChallenges), userId]);
 
     res.status(200).json({ message: 'Challenges submitted successfully!' });
@@ -282,7 +273,6 @@ exports.rerollChallenges = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get the skills the user is currently working on
     const completedSkills = await db.query(
       `SELECT u.skill_id
        FROM user_skills u
@@ -291,10 +281,10 @@ exports.rerollChallenges = async (req, res) => {
       [userId]
     );
 
-    // Generate new challenges based on the user's completed skills
+    
     const newChallenges = await generateChallengesBasedOnSkills(completedSkills);
 
-    // Update the user's challenges JSON column in the database
+    
     await db.query(
       `UPDATE users
        SET challenges = ?
@@ -313,14 +303,14 @@ exports.getUserStatus = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user data including the `in_competition` status
+    
     const user = await db.query('SELECT id, username, in_competition FROM users WHERE id = ?', [userId]);
 
     if (!user || user.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return the user's status
+    
     res.status(200).json({
       id: user[0].id,
       username: user[0].username,
@@ -335,29 +325,29 @@ exports.getUserStatus = async (req, res) => {
 exports.getWorkoutLog = async (req, res) => {
   try {
     const userId = req.user.id;
-    const currentDate = new Date().toISOString().split('T')[0];  // Format the current date as YYYY-MM-DD
+    const currentDate = new Date().toISOString().split('T')[0];  
 
-    // Fetch the workout log for the current date
+    
     const logResult = await db.query(
       'SELECT title, description FROM logs WHERE user_id = ? AND date = ?',
       [userId, currentDate]
     );
 
-    // Check if a log was found
+    
     if (logResult.length === 0) {
       return res.status(404).json({ message: 'No workout log found for today' });
     }
 
     let log = logResult[0];
 
-    // Convert BigInt values to strings (if necessary)
+    
     log = {
       ...log,
-      id: log.id ? log.id.toString() : null,  // Assuming `id` is a BigInt field
-      user_id: log.user_id ? log.user_id.toString() : null  // Assuming `user_id` is a BigInt field
+      id: log.id ? log.id.toString() : null,  
+      user_id: log.user_id ? log.user_id.toString() : null  
     };
 
-    // Respond with the workout log data
+    
     res.json({ success: true, log });
   } catch (error) {
     console.error('Error fetching workout log data:', error);
@@ -376,34 +366,34 @@ exports.updateSkillStatus = async (req, res) => {
       return res.status(400).json({ message: 'Status is required' });
     }
 
-    // Check if the skill exists in the database
+    
     const [existingSkill] = await db.query(
       'SELECT * FROM user_skills WHERE skill_id = ? AND user_id = ?',
       [skillId, user_id]
     );
 
     if (existingSkill.length > 0) {
-      // If the skill exists, update its status
+    
       const [updateResult] = await db.query(
         'UPDATE user_skills SET status = ? WHERE skill_id = ? AND user_id = ?',
         [status, skillId, user_id]
       );
 
-      // Check if any rows were affected
+     
       if (updateResult.affectedRows === 0) {
         return res.status(404).json({ message: 'Skill not found' });
       }
 
-      // Respond with a success message
+      
       return res.status(200).json({ message: 'Skill status updated successfully' });
     } else {
-      // If the skill does not exist, insert a new skill entry
+      
       const [insertResult] = await db.query(
         'INSERT INTO user_skills (user_id, skill_id, status, acquired_at) VALUES (?, ?, ?, ?)',
         [user_id, skillId, status, acquired_at || new Date()]
       );
 
-      // Respond with a success message
+      
       return res.status(201).json({ message: 'Skill created successfully', skillId: insertResult.insertId });
     }
   } catch (error) {
@@ -456,15 +446,15 @@ exports.updateSkillStatus = async (req, res) => {
   }
 
   try {
-    // Check if the skill exists for the user
+    
     const existingSkills = await db.query(
       `SELECT * FROM user_skills WHERE skill_id = ? AND user_id = ?`,
       [skillId, userId]
     );
 
-    // Check if the query returned a valid result
+    
     if (existingSkills && existingSkills.length > 0) {
-      // Skill exists, update the status
+      
       const result = await db.query(
         `UPDATE user_skills 
          SET status = ? 
@@ -478,7 +468,7 @@ exports.updateSkillStatus = async (req, res) => {
 
       res.status(200).json({ message: 'Skill status updated successfully' });
     } else {
-      // Skill doesn't exist, insert a new record
+      
       const result = await db.query(
         `INSERT INTO user_skills (user_id, skill_id, status, acquired_at) 
          VALUES (?, ?, ?, NOW())`,
@@ -503,7 +493,7 @@ exports.getAllSkills = async (req, res, next) => {
     const userId = req.user.id;
 
     try {
-      // Fetch all skills associated with the authenticated user
+      
       const allSkills = await db.query(
         `SELECT *
          FROM user_skills u
@@ -524,7 +514,7 @@ exports.getAllSkills = async (req, res, next) => {
 
 exports.logoutUser = (req, res) => {
   try {
-    // Clear the refreshToken cookie
+    
     res.cookie('refreshToken', '', {
       httpOnly: true,
       secure: true, 
@@ -533,7 +523,7 @@ exports.logoutUser = (req, res) => {
       path: '/',
     });
 
-    // Send a response to confirm logout
+    
     res.status(200).json({ message: 'Successfully logged out' });
   } catch (error) {
     console.error('Error logging out:', error);
@@ -546,18 +536,17 @@ exports.getUserRankAndExperience = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch rank and experience from the users table
     const [user] = await db.query(
       'SELECT rank, experience FROM users WHERE id = ?',
       [userId]
     );
 
-    // Check if user data is retrieved successfully
+    
     if (!user || user.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return the user's rank and experience
+    
     res.status(200).json({
       rank: user.rank,
       experience: user.experience,

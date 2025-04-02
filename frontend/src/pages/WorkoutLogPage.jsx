@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import api from '@/components/shared/api'; // Assuming you have a configured Axios instance
+import api from '@/components/shared/api'; 
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/components/shared/auth/AuthProvider';
 import { Toaster, toast } from 'sonner';

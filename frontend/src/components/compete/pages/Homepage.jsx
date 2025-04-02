@@ -20,16 +20,16 @@ import api from '@/components/shared/api';
 import { useAuth } from '@/components/shared/auth/AuthProvider';
 
 const findSkillById = (skillsData, skillId) => {
-  // Loop through each category of skills
+  
   for (const categoryKey in skillsData) {
     const category = skillsData[categoryKey];
-    // Attempt to find the skill in the 'nodes' array of the current category
+    
     const skill = category.nodes.find(skill => skill.id === skillId);
     if (skill) {
-      return skill; // Return the found skill if it exists
+      return skill; 
     }
   }
-  return null; // Return null if no skill is found with the given ID
+  return null; 
 };
 
 function NewContest() {
@@ -43,7 +43,7 @@ function NewContest() {
     return 5;
   };
 
-  // Filter completed skills (status === 1)
+  
   const completedSkills = skills
     .filter(skill => skill.status === 2)
     .map(skill => skill.skill_id);
@@ -55,7 +55,7 @@ function NewContest() {
       duration: '2 Week',
       skills: completedSkills.reduce((acc, skillId) => {
         const skill = findSkillById(skillsData, skillId);
-        // Initialize each skill with default settings
+        
         if (skill) {
           acc[skillId] = {
             selected: false,
@@ -67,11 +67,11 @@ function NewContest() {
       }, {}),
       goals: completedSkills.reduce((acc, skillId) => {
         const skill = findSkillById(skillsData, skillId);
-        // Initialize goals based on the type of the skill
+        
         if (skill) {
           acc[skillId] = skill.type === 'dynamic'
-            ? { reps: 0 }  // Default for dynamic skills if using reps
-            : { duration: 0 };  // Default for static skills if using duration
+            ? { reps: 0 }  
+            : { duration: 0 };  
         }
         return acc;
       }, {}),
@@ -299,7 +299,7 @@ export default function WorkoutPlanForm() {
   const [error, setError] = useState(null);
   const { token } = useAuth(); 
 
-  // Fetch user data on component mount
+  
   useEffect(() => {
     const fetchUserStatus = async () => {
       try {
@@ -319,13 +319,13 @@ export default function WorkoutPlanForm() {
     fetchUserStatus();
   }, []);
 
-  // Handle loading state
+  
   if (loading) return <div className="text-white">Loading...</div>;
 
-  // Handle error state
+  
   if (error) return <div className="text-red-500">{error}</div>;
 
-  // Parse feedback entries from userStatus
+  
   let feedbackEntries = [];
   if (userStatus && userStatus.in_competition && userStatus.feedback) {
     try {

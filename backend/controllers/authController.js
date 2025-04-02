@@ -5,7 +5,7 @@ const { findUserByEmail, findUserById, createUser, findUserByUsername } = requir
 const jwtConfig = require('../config/jwtConfig');
 const {generateAccessToken, generateRefreshToken} = require('../utils/tokenUtils')
 
-// Login user and issue tokens
+
 exports.loginUser = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     try {
@@ -93,7 +93,7 @@ exports.registerUser = async (req, res) => {
 };
 */
 
-// Refresh token
+
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {

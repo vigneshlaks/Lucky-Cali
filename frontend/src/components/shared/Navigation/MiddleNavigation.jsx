@@ -7,11 +7,9 @@ function AnimatedTabs({ tabs }) {
   const location = useLocation();
 
   const findMatchingTab = (pathname) => {
-    // Check for exact match first
     let currentTab = tabs.find((tab) => tab.path === pathname);
 
     if (!currentTab) {
-      // If no exact match, check for parent paths
       const pathSegments = pathname.split('/');
       while (pathSegments.length > 1 && !currentTab) {
         pathSegments.pop();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '@/components/shared/api'; // Adjust the path according to your project structure
+import api from '@/components/shared/api'; 
 
 const PostCard = ({ post }) => {
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '@/components/shared/api'; // Assuming you have a configured Axios instance
+import api from '@/components/shared/api'; 
 
 const LogDetailsPage = () => {
   const { id } = useParams();

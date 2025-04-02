@@ -10,17 +10,14 @@ import { useAuth } from '../auth/AuthProvider';
 const PlayerProfile = () => {
   const { logout } = useAuth();
   const { skills, loading, error } = useSkillContext();
-  const navigate = useNavigate(); // Hook to navigate the user to another page after logout
+  const navigate = useNavigate(); 
 
-  // Handle loading and error states
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading skills: {error.message}</p>;
 
-  // Calculate skill counts
   const unlockedSkills = skills.filter(skill => skill.status === 1).length;
   const currentSkills = skills.filter(skill => skill.status === 2).length;
 
-  // Calculate locked skills based on skillsData and current skills
   const lockedSkills = Object.values(skillsData).reduce((count, category) => {
     const unseenSkills = category.nodes.filter(skill =>
       !skills.some(userSkill => userSkill.skill_id === skill.id)
@@ -33,7 +30,7 @@ const PlayerProfile = () => {
     return count + unseenSkills + lockedSkillsInCategory;
   }, 0);
 
-  // Get the IDs of unlocked skills
+  
   const unlockedSkillIds = skills
     .filter(skill => skill.status === 1)
     .map(skill => skill.skill_id);

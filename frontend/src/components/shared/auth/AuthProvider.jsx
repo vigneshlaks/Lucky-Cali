@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useLayoutEffect(() => {
-    // Add token to header
     const authInterceptor = api.interceptors.request.use((config) => {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -36,12 +35,10 @@ export const AuthProvider = ({ children }) => {
       return config;
     });
 
-    // If we have an invalid access token, attempt to get a new access token
     const refreshInterceptor = api.interceptors.response.use(
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
-        // Invalid access token check
         if (error.response.status === 403 && error.response.data.message === 'Unauthorized') {
           try {
             const response = await api.get('/auth/refreshToken');
@@ -64,13 +61,10 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
 
-  // Logout function to handle clearing the authentication state
   const logout = async () => {
     try {
-      // Call the logout endpoint to clear server-side cookies or tokens if applicable
       await api.post('/user/logout');
 
-      // Clear the token state and any relevant data
       setToken(null);
 
     } catch (error) {

@@ -4,7 +4,7 @@ import api from '@/components/shared/api';
 
 const PostDetailsPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();  // Hook to get the navigate function
+  const navigate = useNavigate();  
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);

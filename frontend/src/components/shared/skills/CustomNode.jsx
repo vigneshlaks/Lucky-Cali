@@ -9,7 +9,6 @@ const CustomNode = memo(({ data }) => {
   
   const handleStatusChange = (id, newStatus) => {
     
-    // Update the status locally in the state
     const updatedSkills = skills.map((skill) => 
       skill.id === id ? { ...skill, status: newStatus } : skill
     );

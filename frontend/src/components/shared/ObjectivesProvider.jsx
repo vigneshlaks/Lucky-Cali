@@ -15,18 +15,14 @@ export const ObjectivesProvider = ({ children }) => {
       try {
       const { data } = await api.get('/user/objectives');
 
-        // Set goals
         setGoals(data.goals || []);
         
-        // Set challenges
         setChallenges(data.challenges || []);
 
       } catch (error) {
-        // Handle and log the error
         console.error("Error fetching user objectives:", error);
         setError(error);
       } finally {
-        // Ensure loading state is set to false
         setLoading(false);
       }
     };

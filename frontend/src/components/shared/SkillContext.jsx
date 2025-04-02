@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '@/components/shared/api'; // Ensure your API client is correctly configured
+import api from '@/components/shared/api'; 
 import { useAuth } from './auth/AuthProvider';
-// Create the Skill Context
+
 const SkillContext = createContext();
 
-// Custom hook to use the Skill Context
+
 export const useSkillContext = () => useContext(SkillContext);
 
 const defaultSkills = [
@@ -45,14 +45,14 @@ const defaultSkills = [
   },
 ]
 
-// SkillProvider component to wrap parts of the app that need skill data access
+
 export const SkillProvider = ({ children }) => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { token } = useAuth();
 
-  // Function to fetch all skills from the backend
+  
   const fetchAllSkills = async () => {
     try {
       setLoading(true);
@@ -71,12 +71,10 @@ export const SkillProvider = ({ children }) => {
     }
   };
 
-  // Function to update the status of a specific skill
+  
   const updateSkillStatus = async (skillId, newStatus) => {
     try {
-      // Make an API call to update the skill status
       await api.put(`user/skills/${skillId}`, { status: newStatus });
-      // Update the local state to reflect the change
       setSkills((prevSkills) =>
         prevSkills.map((skill) =>
           skill.skill_id === skillId ? { ...skill, status: newStatus } : skill
@@ -88,7 +86,6 @@ export const SkillProvider = ({ children }) => {
     }
   };
 
-  // Effect to fetch all skills on initial render
   useEffect(() => {
     fetchAllSkills();
   }, []);

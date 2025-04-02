@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { query } = require('../config/db');
 
-// Function to find user by email
 async function findUserByEmail(email) {
   try {
     const rows = await query('SELECT * FROM users WHERE email = ?', [email]);
@@ -12,7 +11,7 @@ async function findUserByEmail(email) {
   }
 }
 
-// Function to find user by ID
+
 async function findUserById(id) {
   try {
     const rows = await query('SELECT * FROM users WHERE id = ?', [id]);
@@ -23,7 +22,7 @@ async function findUserById(id) {
   }
 }
 
-// Function to find user by username
+
 async function findUserByUsername(username) {
     try {
       const rows = await query('SELECT * FROM users WHERE username = ?', [username]);
@@ -34,7 +33,7 @@ async function findUserByUsername(username) {
     }
   }
 
-// Function to create a new user
+
 async function createUser(name, email, password, authProvider) {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);

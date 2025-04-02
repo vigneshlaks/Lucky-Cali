@@ -17,7 +17,6 @@ const InnerPage = () => {
     return <p>Invalid node ID: {nodeid}</p>;
   }
 
-  // If a node is selected, render its textData
   if (selectedNodeId) {
     const selectedTextData = textDiagramData[selectedNodeId];
 
@@ -60,11 +59,10 @@ const InnerPage = () => {
   }
 
   if (diagramData) {
-    const verticalSpacing = 150; // Constant vertical spacing between nodes
-    const startX = 0; // Fixed X position for all nodes
-    const startY = 0; // Starting Y position for the first node
+    const verticalSpacing = 150; 
+    const startX = 0; 
+    const startY = 0; 
 
-    // Adjust nodes so they are positioned vertically with constant spacing
     const nodes = diagramData.nodes.map((node, index) =>
       createNode(node.id, node.label, startX, startY + index * verticalSpacing)
     );

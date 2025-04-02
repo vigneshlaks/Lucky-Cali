@@ -14,7 +14,6 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 1000;
 
-// Connect to Database
 connectDB();
 
 // Middleware
@@ -34,7 +33,7 @@ app.use(cors({
 
 /*
 app.use(cors({
-  origin: '*',  // This allows all origins
+  origin: '*',  
   credentials: true
 }));
 */
@@ -51,7 +50,6 @@ app.use('/train', trainRoutes);
 app.use('/compete', competeRoutes);
 
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
